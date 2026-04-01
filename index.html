@@ -896,14 +896,11 @@ footer strong { color: var(--white); }
   text-transform: uppercase;
   color: rgba(245,245,240,0.45);
 }
-/* ── BASE FIELD — aplicado a todos os inputs e iframes do checkout ── */
-.stripe-input,
-#form-checkout__cardNumber,
-#form-checkout__expirationDate,
-#form-checkout__securityCode,
-.stripe-el {
+/* ── BASE FIELD — todos os inputs do checkout agora são nativos ── */
+.stripe-input {
   width: 100%;
   box-sizing: border-box;
+  display: block;
   height: 42px;
   min-height: 42px;
   max-height: 42px;
@@ -913,45 +910,22 @@ footer strong { color: var(--white); }
   padding: 10px 12px;
   font-family: 'Barlow', sans-serif;
   font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
   color: var(--white);
   outline: none;
   transition: border-color 0.2s;
 }
-
-/* inputs nativos precisam de display block */
-.stripe-input {
-  display: block;
-  line-height: normal;
-  padding: 10px 12px;
-}
 .stripe-input::placeholder { color: rgba(245,245,240,0.25); }
 .stripe-input:focus        { border-color: rgba(230,51,41,0.5); }
 
-/* containers dos iframes */
-#form-checkout__cardNumber,
-#form-checkout__expirationDate,
-#form-checkout__securityCode,
-.stripe-el {
+/* gap interno dos blocos de campos */
+#card-fields,
+#boleto-fields {
   display: flex;
-  align-items: center;
-  padding: 0 0 0 12px;
-  overflow: hidden;
-  flex-shrink: 0;
+  flex-direction: column;
+  gap: 18px;
 }
-
-/* iframes internos ocupam 100% do container */
-#form-checkout__cardNumber iframe,
-#form-checkout__expirationDate iframe,
-#form-checkout__securityCode iframe {
-  height: 42px !important;
-  min-height: 42px !important;
-  max-height: 42px !important;
-  width: 100% !important;
-  color-scheme: dark;
-}
-
-.stripe-el.focused { border-color: rgba(230,51,41,0.5); }
-.stripe-el.invalid { border-color: #e63329; }
 
 #form-checkout__identificationNumber {
   background: #1c1c1c !important;
@@ -959,7 +933,7 @@ footer strong { color: var(--white); }
   border-color: var(--border) !important;
   border-radius: 3px !important;
   color: var(--white) !important;
-  font-family: Arial, sans-serif !important;
+  font-family: 'Barlow', sans-serif !important;
   font-size: 14px !important;
   height: 42px !important;
   min-height: 42px !important;
@@ -1595,16 +1569,16 @@ footer strong { color: var(--white); }
             <div id="card-fields">
               <div class="stripe-field">
                 <label class="stripe-label">Número do cartão</label>
-                <div class="stripe-el" id="form-checkout__cardNumber"></div>
+                <input class="stripe-input" id="form-checkout__cardNumber" type="text" placeholder="0000 0000 0000 0000" inputmode="numeric" autocomplete="cc-number" />
               </div>
               <div class="stripe-row">
                 <div class="stripe-field">
                   <label class="stripe-label">Validade</label>
-                  <div class="stripe-el" id="form-checkout__expirationDate"></div>
+                  <input class="stripe-input" id="form-checkout__expirationDate" type="text" placeholder="MM/AA" inputmode="numeric" autocomplete="cc-exp" />
                 </div>
                 <div class="stripe-field">
                   <label class="stripe-label">CVC</label>
-                  <div class="stripe-el" id="form-checkout__securityCode"></div>
+                  <input class="stripe-input" id="form-checkout__securityCode" type="text" placeholder="CVV" inputmode="numeric" autocomplete="cc-csc" />
                 </div>
               </div>
               <div class="stripe-field">
@@ -1773,46 +1747,12 @@ function initCardForm() {
 
   cardFormInstance = mp.cardForm({
     amount: '99.00',
-    iframe: true,
-    customization: {
-      visual: {
-        style: {
-          theme: 'dark',
-        }
-      }
-    },
+    iframe: false,
     form: {
       id: 'form-checkout',
-      cardNumber:           {
-        id: 'form-checkout__cardNumber',
-        placeholder: '0000 0000 0000 0000',
-        style: {
-          fontFamily: 'Barlow',
-        },
-        customFonts: [
-          { src: 'https://fonts.googleapis.com/css2?family=Barlow' }
-        ]
-      },
-      expirationDate:       {
-        id: 'form-checkout__expirationDate',
-        placeholder: 'MM/AA',
-        style: {
-          fontFamily: 'Barlow',
-        },
-        customFonts: [
-          { src: 'https://fonts.googleapis.com/css2?family=Barlow' }
-        ]
-      },
-      securityCode:         {
-        id: 'form-checkout__securityCode',
-        placeholder: 'CVV',
-        style: {
-          fontFamily: 'Barlow',
-        },
-        customFonts: [
-          { src: 'https://fonts.googleapis.com/css2?family=Barlow' }
-        ]
-      },
+      cardNumber:           { id: 'form-checkout__cardNumber',           placeholder: '0000 0000 0000 0000' },
+      expirationDate:       { id: 'form-checkout__expirationDate',       placeholder: 'MM/AA' },
+      securityCode:         { id: 'form-checkout__securityCode',         placeholder: 'CVV' },
       cardholderName:       { id: 's-fname',                             placeholder: 'Nome no cartão' },
       issuer:               { id: 'form-checkout__issuer' },
       installments:         { id: 'form-checkout__installments' },
