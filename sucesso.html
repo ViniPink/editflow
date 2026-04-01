@@ -1,30 +1,81 @@
-// api/create-payment-intent.js
-// Vercel Serverless Function — executa no servidor, nunca expõe a secret key
-
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-
-module.exports = async function handler(req, res) {
-  // Só aceita POST
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
-  try {
-    const { email, name } = req.body;
-
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: 19700,           // R$ 197,00 em centavos
-      currency: 'brl',
-      receipt_email: email,
-      description: 'Editflow — Acesso vitalício',
-      metadata: { name: name || '' },
-      automatic_payment_methods: { enabled: true },
-    });
-
-    res.status(200).json({ clientSecret: paymentIntent.client_secret });
-
-  } catch (err) {
-    console.error('Stripe error:', err.message);
-    res.status(500).json({ error: err.message });
-  }
-};
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Editflow — Acesso liberado!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07080a;
+      --accent: #e8ff57;
+      --text: #edeae2;
+      --muted: #6b7280;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+    }
+    .wrap { max-width: 480px; }
+    .icon {
+      font-size: 3rem;
+      margin-bottom: 24px;
+      animation: pop 0.5s cubic-bezier(.17,.67,.35,1.4) forwards;
+    }
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.4rem;
+      margin-bottom: 16px;
+      line-height: 1.1;
+    }
+    h1 span { color: var(--accent); font-style: italic; }
+    p {
+      font-size: 1rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 28px;
+      background: var(--accent);
+      color: #07080a;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: #d4ec47; }
+    @keyframes pop {
+      from { transform: scale(0.5); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="icon">✓</div>
+    <h1>Acesso <span>liberado!</span></h1>
+    <p>
+      Seu pagamento foi confirmado.<br>
+      Você receberá um e-mail com as instruções de acesso em instantes.
+    </p>
+    <!--
+      Substitua o href abaixo pelo link da sua área de membros
+    -->
+    <a href="#" class="btn">Acessar agora →</a>
+  </div>
+</body>
+</html>
