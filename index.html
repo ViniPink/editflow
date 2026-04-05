@@ -1740,6 +1740,16 @@ const mp = new MercadoPago(MP_PUBLIC_KEY, { locale: 'pt-BR' });
 let currentTab = 'card';
 let cardFormInstance = null;
 let cardFormReady = false;
+let loadingTimer = null;
+
+function startLoadingTimer() {
+  clearTimeout(loadingTimer);
+  loadingTimer = setTimeout(() => {
+    setLoading(false);
+    setMsg('Tempo esgotado. Verifique os dados do cartão e tente novamente.', false);
+  }, 15000);
+}
+function clearLoadingTimer() { clearTimeout(loadingTimer); }
 
 // Inicializa o CardForm do MP
 function initCardForm() {
@@ -1789,10 +1799,12 @@ function initCardForm() {
         const lastName  = document.getElementById('s-lname').value.trim();
 
         if (!firstName || !cardholderEmail) {
+          setLoading(false);
           setMsg('Preencha nome e e-mail.', false);
           return;
         }
 
+        clearLoadingTimer();
         setLoading(true);
         try {
           const res = await fetch('/api/create-mp-payment', {
@@ -1826,6 +1838,7 @@ function initCardForm() {
       },
       onFetchingResource: () => {},
       onCardTokenReceived: (error) => {
+        clearLoadingTimer();
         if (error) {
           setLoading(false);
           setMsg('Erro ao processar cartão. Verifique os dados e tente novamente.', false);
@@ -1955,6 +1968,7 @@ document.getElementById('pay-btn').addEventListener('click', async () => {
     // CardForm do MP cuida do submit via onSubmit callback
     if (!cardFormReady) { setMsg('Aguarde o formulário carregar.', false); return; }
     setLoading(true);
+    startLoadingTimer();
     document.getElementById('form-checkout').requestSubmit
       ? document.getElementById('form-checkout').requestSubmit()
       : document.getElementById('form-checkout').submit();
