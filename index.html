@@ -896,28 +896,51 @@ footer strong { color: var(--white); }
   text-transform: uppercase;
   color: rgba(245,245,240,0.45);
 }
-/* ── BASE FIELD — todos os inputs do checkout agora são nativos ── */
-.stripe-input {
+/* ── BASE FIELD ── */
+.stripe-input,
+#form-checkout__cardNumber,
+#form-checkout__expirationDate,
+#form-checkout__securityCode,
+.stripe-el {
   width: 100%;
   box-sizing: border-box;
-  display: block;
   height: 42px;
   min-height: 42px;
   max-height: 42px;
   background: #1c1c1c;
   border: 1px solid var(--border);
   border-radius: 3px;
-  padding: 10px 12px;
   font-family: 'Barlow', sans-serif;
   font-size: 14px;
-  font-weight: 400;
-  line-height: normal;
   color: var(--white);
   outline: none;
   transition: border-color 0.2s;
 }
+.stripe-input {
+  display: block;
+  padding: 10px 12px;
+  line-height: normal;
+}
 .stripe-input::placeholder { color: rgba(245,245,240,0.25); }
 .stripe-input:focus        { border-color: rgba(230,51,41,0.5); }
+
+#form-checkout__cardNumber,
+#form-checkout__expirationDate,
+#form-checkout__securityCode,
+.stripe-el {
+  display: flex;
+  align-items: center;
+  padding: 0 0 0 12px;
+  overflow: hidden;
+}
+#form-checkout__cardNumber iframe,
+#form-checkout__expirationDate iframe,
+#form-checkout__securityCode iframe {
+  height: 42px !important;
+  min-height: 42px !important;
+  max-height: 42px !important;
+  width: 100% !important;
+}
 
 /* gap interno dos blocos de campos */
 #card-fields,
@@ -1751,7 +1774,7 @@ function initCardForm() {
       cardNumber:           { id: 'form-checkout__cardNumber',           placeholder: '0000 0000 0000 0000' },
       expirationDate:       { id: 'form-checkout__expirationDate',       placeholder: 'MM/AA' },
       securityCode:         { id: 'form-checkout__securityCode',         placeholder: 'CVV' },
-      cardholderName:       { id: 's-fname',                             placeholder: 'Nome no cartão' },
+      cardholderName:       { id: 's-fname',                             placeholder: 'Nome' },
       issuer:               { id: 'form-checkout__issuer' },
       installments:         { id: 'form-checkout__installments' },
       identificationType:   { id: 'form-checkout__identificationType' },
