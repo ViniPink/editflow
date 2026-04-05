@@ -1949,7 +1949,6 @@ document.getElementById('pay-btn').addEventListener('click', async () => {
   if (currentTab === 'card') {
     // CardForm do MP cuida do submit via onSubmit callback
     if (!cardFormReady) { setMsg('Aguarde o formulário carregar.', false); return; }
-    setLoading(true);
     document.getElementById('form-checkout').requestSubmit
       ? document.getElementById('form-checkout').requestSubmit()
       : document.getElementById('form-checkout').submit();
