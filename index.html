@@ -1738,118 +1738,6 @@ function initMP() {
 const mp = new MercadoPago(MP_PUBLIC_KEY, { locale: 'pt-BR' });
 
 let currentTab = 'card';
-let cardFormInstance = null;
-let cardFormReady = false;
-let loadingTimer = null;
-
-function startLoadingTimer() {
-  clearTimeout(loadingTimer);
-  loadingTimer = setTimeout(() => {
-    setLoading(false);
-    setMsg('Tempo esgotado. Verifique os dados do cartão e tente novamente.', false);
-  }, 15000);
-}
-function clearLoadingTimer() { clearTimeout(loadingTimer); }
-
-// Inicializa o CardForm do MP
-function initCardForm() {
-  if (cardFormInstance) return;
-
-  cardFormInstance = mp.cardForm({
-    amount: '99.00',
-    iframe: false,
-    form: {
-      id: 'form-checkout',
-      cardNumber:           { id: 'form-checkout__cardNumber',           placeholder: '0000 0000 0000 0000' },
-      expirationDate:       { id: 'form-checkout__expirationDate',       placeholder: 'MM/AA' },
-      securityCode:         { id: 'form-checkout__securityCode',         placeholder: 'CVV' },
-      cardholderName:       { id: 's-fname',                             placeholder: 'Nome no cartão' },
-      issuer:               { id: 'form-checkout__issuer' },
-      installments:         { id: 'form-checkout__installments' },
-      identificationType:   { id: 'form-checkout__identificationType' },
-      identificationNumber: { id: 'form-checkout__identificationNumber', placeholder: '000.000.000-00' },
-      cardholderEmail:      { id: 's-email',                             placeholder: 'seu@email.com' },
-    },
-    callbacks: {
-      onFormMounted: error => {
-        if (error) { console.warn('CardForm mount error:', error); return; }
-        cardFormReady = true;
-        // Remove qualquer inline style de borda que o MP aplica ao montar
-        const cpfEl = document.getElementById('form-checkout__identificationNumber');
-        if (cpfEl) {
-          cpfEl.style.border = '';
-          cpfEl.style.borderColor = '';
-          cpfEl.style.boxShadow = 'none';
-        }
-      },
-      onSubmit: async (event) => {
-        event.preventDefault();
-        const {
-          paymentMethodId,
-          issuerId,
-          cardholderEmail,
-          amount,
-          token,
-          installments,
-          identificationNumber,
-          identificationType,
-        } = cardFormInstance.getCardFormData();
-
-        const firstName = document.getElementById('s-fname').value.trim();
-        const lastName  = document.getElementById('s-lname').value.trim();
-
-        if (!firstName || !cardholderEmail) {
-          setLoading(false);
-          setMsg('Preencha nome e e-mail.', false);
-          return;
-        }
-
-        clearLoadingTimer();
-        setLoading(true);
-        try {
-          const res = await fetch('/api/create-mp-payment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              type: 'card',
-              token,
-              issuerId,
-              paymentMethodId,
-              installments: Number(installments),
-              email: cardholderEmail,
-              firstName,
-              lastName,
-              identificationType,
-              identificationNumber,
-            }),
-          });
-          const data = await res.json();
-          if (!res.ok || data.error) throw new Error(data.error || 'Erro ao processar pagamento.');
-          if (data.status === 'approved') {
-            setMsg('✓ Pagamento aprovado! Redirecionando...', true);
-            setTimeout(() => { window.location.href = '/sucesso.html'; }, 1500);
-          } else {
-            setMsg('Pagamento ' + data.status + '. Verifique os dados.', false);
-          }
-        } catch (err) {
-          setMsg(err.message || 'Erro inesperado. Tente novamente.', false);
-        }
-        setLoading(false);
-      },
-      onFetchingResource: () => {},
-      onCardTokenReceived: (error) => {
-        clearLoadingTimer();
-        if (error) {
-          setLoading(false);
-          setMsg('Erro ao processar cartão. Verifique os dados e tente novamente.', false);
-        }
-      },
-    },
-  });
-}
-
-// Inicializa o CardForm na carga da página
-initCardForm();
 
 window.switchTab = switchTab;
 function switchTab(tab) {
@@ -1965,13 +1853,62 @@ async function generatePix() {
 
 document.getElementById('pay-btn').addEventListener('click', async () => {
   if (currentTab === 'card') {
-    // CardForm do MP cuida do submit via onSubmit callback
-    if (!cardFormReady) { setMsg('Aguarde o formulário carregar.', false); return; }
+    const firstName = document.getElementById('s-fname').value.trim();
+    const lastName  = document.getElementById('s-lname').value.trim();
+    const email     = document.getElementById('s-email').value.trim();
+    const cardNumber = document.getElementById('form-checkout__cardNumber').value.replace(/\D/g, '');
+    const expiry     = document.getElementById('form-checkout__expirationDate').value.trim();
+    const cvv        = document.getElementById('form-checkout__securityCode').value.trim();
+    const cpf        = document.getElementById('form-checkout__identificationNumber').value.replace(/\D/g, '');
+
+    if (!firstName || !email)    { setMsg('Preencha nome e e-mail.', false); return; }
+    if (cardNumber.length < 13)  { setMsg('Número do cartão inválido.', false); return; }
+    if (!expiry.includes('/'))   { setMsg('Validade inválida.', false); return; }
+    if (cvv.length < 3)          { setMsg('CVV inválido.', false); return; }
+    if (cpf.length !== 11)       { setMsg('CPF inválido.', false); return; }
+
+    const [expMonth, expYear] = expiry.split('/');
+
     setLoading(true);
-    startLoadingTimer();
-    document.getElementById('form-checkout').requestSubmit
-      ? document.getElementById('form-checkout').requestSubmit()
-      : document.getElementById('form-checkout').submit();
+    try {
+      const tokenResult = await mp.createCardToken({
+        cardNumber,
+        cardholderName: firstName + (lastName ? ' ' + lastName : ''),
+        cardExpirationMonth: expMonth.trim(),
+        cardExpirationYear: '20' + expYear.trim(),
+        securityCode: cvv,
+        identificationType: 'CPF',
+        identificationNumber: cpf,
+      });
+
+      const res = await fetch('/api/create-mp-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'card',
+          token: tokenResult.id,
+          paymentMethodId: tokenResult.payment_method_id,
+          issuerId: tokenResult.issuer_id,
+          installments: 1,
+          email,
+          firstName,
+          lastName,
+          identificationType: 'CPF',
+          identificationNumber: cpf,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) throw new Error(data.error || 'Erro ao processar pagamento.');
+      if (data.status === 'approved') {
+        setMsg('✓ Pagamento aprovado! Redirecionando...', true);
+        setTimeout(() => { window.location.href = '/sucesso.html'; }, 1500);
+      } else {
+        setMsg('Pagamento ' + data.status + '. Verifique os dados do cartão.', false);
+      }
+    } catch (err) {
+      setMsg(err.message || 'Erro ao processar cartão. Verifique os dados.', false);
+    }
+    setLoading(false);
     return;
   }
 
