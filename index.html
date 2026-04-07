@@ -1488,33 +1488,7 @@ footer strong { color: var(--white); }
 <!-- CHECKOUT -->
 <section class="checkout" id="checkout">
   <div class="container">
-    <div class="checkout-grid">
-      <div class="checkout-summary">
-        <p class="section-label">Resumo do que você leva</p>
-        <h2>Tudo que está<br>dentro do <em>Editflow</em></h2>
-        <p>Acesso completo por 1 ano. Conteúdo novo toda semana.</p>
-        <ul class="summary-list">
-          <li><span class="check">✓</span> Módulo de Modelagem — nova toda semana</li>
-          <li><span class="check">✓</span> Módulo de Edição completo no CapCut</li>
-          <li><span class="check">✓</span> Módulo de IA — imagem, vídeo, áudio e GPTs</li>
-          <li><span class="check">✓</span> Crie seu avatar de IA</li>
-          <li><span class="check">✓</span> <span style="display:inline-flex;align-items:center;gap:8px;">GPT IA Flow — Exclusivo Editflow <span style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 7px 2px;border-radius:2px;line-height:1;background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.25);color:#a855f7;animation:bonusBorder 2.5s ease-in-out infinite;flex-shrink:0;">BONUS</span></span></li>
-          <li><span class="check">✓</span> <span style="display:inline-flex;align-items:center;gap:8px;">Acesso às Lives gravadas <span class="badge-em-breve">EM BREVE</span></span></li>
-          <li><span class="check">✓</span> Estudos exclusivos no Discord</li>
-          <li><span class="check">✓</span> PDF de prompts e GPTs por nicho</li>
-          <li><span class="check">✓</span> <span style="display:inline-flex;align-items:center;gap:8px;">Sessão de feedback de vídeos <span style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 7px 2px;border-radius:2px;line-height:1;background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.25);color:#a855f7;animation:bonusBorder 2.5s ease-in-out infinite;flex-shrink:0;">BONUS</span></span></li>
-          <li><span class="check">✓</span> Acesso por 1 ano com atualizações</li>
-        </ul>
-
-        <div class="urgency-block" style="margin-top: 40px; margin-bottom: 32px; border-left: 3px solid var(--red); padding-left: 20px; text-align: left;">
-          <p style="font-family: 'Bebas Neue', sans-serif; font-size: clamp(20px, 2.5vw, 28px); line-height: 1.15; color: var(--white); margin-bottom: 0;">
-            Enquanto você lê isso, alguém está usando IA pra criar o próximo vídeo viral.<br>
-            <span style="background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">O método já existe. Falta só você.</span>
-          </p>
-        </div>
-
-      </div>
-
+    <div class="checkout-grid" style="justify-content: center;">
       <div class="checkout-card">
 
         <!-- HEADER V4 — igual no desktop e mobile -->
@@ -1541,103 +1515,12 @@ footer strong { color: var(--white); }
             <div class="guarantee-text"><strong>Garantia de 7 dias.</strong> Se não gostar por qualquer motivo, devolvemos 100% do valor sem perguntas.</div>
           </div>
 
-          <!-- ABAS CARTÃO / BOLETO / PIX -->
-          <div style="display:flex; gap:0; margin-bottom:16px; border:1px solid var(--border); border-radius:8px; overflow:hidden;">
-            <button id="tab-card" onclick="switchTab('card')" style="flex:1; padding:10px; background:var(--red); color:#fff; border:none; cursor:pointer; font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase;">Cartão</button>
-            <button id="tab-boleto" onclick="switchTab('boleto')" style="flex:1; padding:10px; background:var(--surface2); color:rgba(245,245,240,0.5); border:none; cursor:pointer; font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; border-left:1px solid var(--border); border-right:1px solid var(--border);">Boleto</button>
-            <button id="tab-pix" onclick="switchTab('pix')" style="flex:1; padding:10px; background:var(--surface2); color:rgba(245,245,240,0.5); border:none; cursor:pointer; font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase;">PIX</button>
-          </div>
+          <a href="https://pay.kiwify.com.br/nNQrrRP" target="_blank" class="btn-checkout" style="display:flex; align-items:center; justify-content:center; gap:10px; text-decoration:none; white-space:nowrap;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            Garantir meu acesso!
+          </a>
 
-          <!-- MERCADO PAGO FORM -->
-          <form class="stripe-form" id="form-checkout">
-            <div class="stripe-row">
-              <div class="stripe-field">
-                <label class="stripe-label">Nome</label>
-                <input class="stripe-input" id="s-fname" type="text" placeholder="Seu nome" autocomplete="given-name" />
-              </div>
-              <div class="stripe-field">
-                <label class="stripe-label">Sobrenome</label>
-                <input class="stripe-input" id="s-lname" type="text" placeholder="Sobrenome" autocomplete="family-name" />
-              </div>
-            </div>
-            <div class="stripe-field">
-              <label class="stripe-label">E-mail</label>
-              <input class="stripe-input" id="s-email" type="email" placeholder="seu@email.com" autocomplete="email" />
-            </div>
-
-            <!-- campos cartão -->
-            <div id="card-fields">
-              <div class="stripe-field">
-                <label class="stripe-label">Número do cartão</label>
-                <input class="stripe-input" id="form-checkout__cardNumber" type="text" placeholder="0000 0000 0000 0000" inputmode="numeric" autocomplete="cc-number" />
-              </div>
-              <div class="stripe-row">
-                <div class="stripe-field">
-                  <label class="stripe-label">Validade</label>
-                  <input class="stripe-input" id="form-checkout__expirationDate" type="text" placeholder="MM/AA" inputmode="numeric" autocomplete="cc-exp" />
-                </div>
-                <div class="stripe-field">
-                  <label class="stripe-label">CVC</label>
-                  <input class="stripe-input" id="form-checkout__securityCode" type="text" placeholder="CVV" inputmode="numeric" autocomplete="cc-csc" />
-                </div>
-              </div>
-              <div class="stripe-field">
-                <label class="stripe-label">CPF do titular</label>
-                <input class="stripe-input" id="form-checkout__identificationNumber" type="text" placeholder="000.000.000-00" maxlength="14" autocomplete="off" />
-              </div>
-              <!-- campos ocultos exigidos pelo MP -->
-              <select id="form-checkout__issuer" style="display:none;"></select>
-              <select id="form-checkout__installments" style="display:none;"></select>
-              <select id="form-checkout__identificationType" style="display:none;"></select>
-            </div>
-
-            <!-- campo boleto -->
-            <div id="boleto-fields" style="display:none;">
-              <div class="stripe-field">
-                <label class="stripe-label">CPF</label>
-                <input class="stripe-input" id="s-cpf" type="text" placeholder="000.000.000-00" maxlength="14" />
-              </div>
-              <div style="margin-top:16px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:12px 14px; font-size:12px; color:rgba(245,245,240,0.5); line-height:1.5;">
-                O boleto vence em <strong style="color:var(--white);">3 dias</strong>. Após o pagamento, o acesso é liberado em até 3 dias úteis.
-              </div>
-            </div>
-
-            <!-- campo pix -->
-            <div id="pix-fields" style="display:none; text-align:center;">
-              <div style="background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:20px 16px;">
-                <div style="font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; letter-spacing:1px; color:rgba(245,245,240,0.5); text-transform:uppercase; margin-bottom:16px;">Escaneie o QR Code</div>
-                <div id="pix-loading" style="display:none; align-items:center; justify-content:center; width:204px; height:204px; margin:0 auto;">
-                  <div style="width:36px; height:36px; border:3px solid rgba(240,115,34,0.2); border-top:3px solid #f07322; border-radius:50%; animation:pixSpin 0.7s linear infinite;"></div>
-                </div>
-                <div id="pix-qrcode" style="display:none; background:#fff; padding:12px; border-radius:8px; margin:0 auto; width:fit-content;"><img id="pix-qrcode-img" src="" alt="QR Code PIX" style="width:180px;height:180px;display:block;" /></div>
-                <div id="pix-placeholder" style="display:flex; flex-direction:column; align-items:center; gap:8px; padding:20px 0;">
-                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(245,245,240,0.2)" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3" rx="0.5"/><rect x="19" y="14" width="2" height="2" rx="0.5"/><rect x="14" y="19" width="2" height="2" rx="0.5"/><rect x="18" y="18" width="3" height="3" rx="0.5"/></svg>
-                  <span style="font-size:12px; color:rgba(245,245,240,0.3);">Preencha nome e e-mail e clique em Gerar PIX</span>
-                </div>
-                <div style="margin-top:16px; font-family:'Barlow Condensed',sans-serif; font-size:28px; font-weight:700; background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">R$ 99,00</div>
-                <div style="margin-top:6px; font-size:12px; color:rgba(245,245,240,0.4); line-height:1.5;">Abra o app do seu banco → PIX → Ler QR Code</div>
-              </div>
-              <div id="pix-copy-block" style="display:none; margin-top:20px; padding:10px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px;">
-                <div style="font-size:11px; color:rgba(245,245,240,0.35); margin-bottom:6px; text-transform:uppercase; letter-spacing:1px;">Ou copie o código</div>
-                <div style="display:flex; gap:6px;">
-                  <input id="pix-code" readonly style="flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:8px 10px; color:rgba(245,245,240,0.6); font-size:11px; font-family:monospace; overflow:hidden; text-overflow:ellipsis;" value="" />
-                  <button type="button" onclick="copyPix()" id="copy-btn" style="background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:8px 12px; color:var(--white); cursor:pointer; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; white-space:nowrap;">Copiar</button>
-                </div>
-              </div>
-            </div>
-          </form>
-
-          <div id="pay-msg"></div>
-
-          <button class="btn-checkout" id="pay-btn" style="white-space: nowrap;">
-            <div class="btn-pay-spinner"></div>
-            <span class="btn-pay-label" id="pay-btn-label" style="display: flex; align-items: center; gap: 10px;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-              Garantir meu acesso!
-            </span>
-          </button>
-
-          <div class="security">🔒 Pagamento seguro via Mercado Pago · SSL</div>
+          <div class="security">🔒 Pagamento seguro · SSL</div>
           <div class="access-tags" style="display: flex; flex-wrap: nowrap; gap: 6px; justify-content: center;">
             <span class="access-tag" style="font-size: 10px; padding: 3px 8px;">Área de membros</span>
             <span class="access-tag" style="font-size: 10px; padding: 3px 8px;">Discord exclusivo</span>
