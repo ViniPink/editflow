@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modelagem Cardboard — Editflow</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#07080a;--bg2:#0d0f13;--bg3:#12151b;--accent:#d4a853;--accent-dim:rgba(212,168,83,0.15);
+--text:#f0f0f0;--text-dim:#9ca3af;--text-mid:#d1d5db;--border:#1a1d25;--red:#ef4444;--green:#22c55e;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 24px;position:relative;overflow:hidden;background:url('img/bg.png') center/cover no-repeat}
+.hero::before{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(7,8,10,0.5) 0%,rgba(7,8,10,0.8) 60%,rgba(7,8,10,1) 100%);pointer-events:none}
+.hero>*{position:relative;z-index:1}
+.hero-badge{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:6px;color:var(--accent);margin-bottom:12px}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(56px,12vw,120px);line-height:0.9;letter-spacing:2px;margin-bottom:8px}
+.hero h1 span{display:block;font-size:clamp(20px,4vw,32px);letter-spacing:8px;color:var(--text-dim);margin-top:8px}
+.container{max-width:680px;margin:0 auto;padding:0 24px}
+
+/* SECTIONS */
+section{padding:72px 0;border-bottom:1px solid var(--border)}
+.step-tag{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:4px;color:var(--accent);margin-bottom:6px}
+.step-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,5vw,40px);line-height:1;margin-bottom:20px}
+.body-text{color:var(--text-mid);font-size:15px;line-height:1.75;margin-bottom:20px}
+.body-text strong{color:var(--text);font-weight:600}
+
+/* ALERT */
+.alert{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:10px;padding:16px 20px;margin:20px 0;font-size:13px;color:var(--text-mid);line-height:1.6}
+.alert::before{content:'🚨 ';font-size:14px}
+
+/* INFO BOX */
+.info-box{background:var(--accent-dim);border:1px solid rgba(212,168,83,0.3);border-radius:10px;padding:18px 22px;margin:24px 0}
+.info-label{font-weight:700;font-size:13px;color:var(--accent);letter-spacing:1px;margin-bottom:6px}
+.info-text{font-size:14px;color:var(--text-mid);line-height:1.6}
+
+/* LINKS */
+a.ref{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(212,168,83,0.3);transition:border-color .2s}
+a.ref:hover{border-color:var(--accent)}
+
+/* FORMULA */
+.formula{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:20px 22px;margin:12px 0}
+.formula-num{font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:2px;color:var(--accent);margin-bottom:2px}
+.formula-title{font-weight:700;font-size:15px;margin-bottom:4px}
+.formula-desc{color:var(--text-dim);font-size:13px;line-height:1.5}
+.formula-example{margin-top:8px;padding:10px 14px;background:rgba(255,255,255,0.02);border-left:2px solid var(--accent);border-radius:0 6px 6px 0;font-style:italic;font-size:13px;color:var(--text-mid);line-height:1.6}
+
+/* PROMPT BLOCK */
+.prompt-block{background:#0a0c10;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;margin:24px 0;overflow:hidden}
+.prompt-header{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid var(--border);background:rgba(212,168,83,0.04)}
+.prompt-label{font-size:11px;font-weight:600;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase}
+.copy-btn{display:flex;align-items:center;gap:6px;background:transparent;border:1px solid rgba(212,168,83,0.3);color:var(--accent);font-family:'Barlow',sans-serif;font-size:12px;font-weight:600;padding:5px 12px;border-radius:5px;cursor:pointer;transition:all .2s}
+.copy-btn:hover{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+.copy-btn.copied{background:var(--green);border-color:var(--green);color:var(--bg)}
+.copy-btn svg{width:13px;height:13px}
+.prompt-content{padding:16px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.8;color:var(--text-mid);white-space:pre-wrap;word-break:break-word;max-height:500px;overflow-y:auto}
+.prompt-content::-webkit-scrollbar{width:4px}
+.prompt-content::-webkit-scrollbar-track{background:transparent}
+.prompt-content::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+/* RESULT CARDS */
+.result-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:16px 0}
+.result-img{width:100%;background:#111;border-bottom:1px solid var(--border)}
+.result-img img{width:100%;display:block}
+.result-body{padding:18px 20px}
+.result-tool{font-size:11px;font-weight:600;letter-spacing:1px;color:var(--accent);margin-bottom:8px}
+.result-prompt{font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.7;color:var(--text-mid);margin-bottom:14px}
+
+/* TERMS GRID */
+.terms-section{margin:24px 0}
+.terms-title{font-weight:700;font-size:13px;letter-spacing:1px;color:var(--accent);margin-bottom:10px;text-transform:uppercase}
+.term-item{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-mid);line-height:2;padding-left:12px;border-left:2px solid var(--border)}
+
+/* STEP LIST */
+.step-item{display:flex;gap:14px;margin:16px 0;align-items:flex-start}
+.step-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:8px}
+.step-content{font-size:14px;color:var(--text-mid);line-height:1.6}
+.step-content strong{color:var(--text)}
+
+/* FOOTER */
+.footer{text-align:center;padding:60px 24px;border-top:1px solid var(--border)}
+.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;color:var(--accent)}
+
+/* FADE */
+.fade-in{opacity:1;transform:translateY(0)}
+
+@media(max-width:600px){
+  .container{padding:0 18px}
+  section{padding:56px 0}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <img src="img/logo.png" alt="Editflow" style="height:48px;margin-bottom:16px">
+  <h1>CARDBOARD<span>M O D E L A G E M</span></h1>
+</div>
+
+<!-- SOBRE O NICHO -->
+<section>
+  <div class="container fade-in">
+    <p class="body-text"><strong>Sobre o nicho:</strong></p>
+    <p class="body-text">No nicho animal artesanal informativo você cria imagens com inteligência artificial que parecem feitas a mão e cria roteiros envolta de fatos interessantes sobre o mundo animal.</p>
+    <p class="body-text">É um nicho específico, portanto, lembre-se: Você pode adaptar cada um dos pilares desse nicho para criar a sua própria versão original. Modelar é sempre melhor que copiar.</p>
+
+    <p class="body-text" style="margin-top:32px"><strong>Ferramentas necessárias pra criação:</strong></p>
+    <div class="step-item"><div class="step-dot"></div><div class="step-content"><strong>Claude:</strong> Ideias, roteiro e prompt</div></div>
+    <div class="step-item"><div class="step-dot"></div><div class="step-content"><strong>Geração de imagens:</strong> Nano Banana Pro</div></div>
+    <div class="step-item"><div class="step-dot"></div><div class="step-content"><strong>Geração de Vídeo:</strong> Kling 3.0</div></div>
+
+    <div class="alert">As IA's de geração de imagem e vídeo podem ser substituídas pelo manuseio de IA's locais no Comfy caso você tenha poder computacional e conhecimento de IA local.</div>
+
+    <div class="step-item"><div class="step-dot"></div><div class="step-content"><strong>CapCut:</strong> Edição de Vídeos</div></div>
+
+    <p class="body-text" style="margin-top:32px"><strong>Conta de modelagem:</strong></p>
+    <div class="step-item"><div class="step-dot"></div><div class="step-content">TikTok: <a class="ref" href="https://www.tiktok.com/@cardboard_cinema" target="_blank">Conta original</a></div></div>
+    <div class="step-item"><div class="step-dot"></div><div class="step-content">Vídeo modelo: <a class="ref" href="https://www.tiktok.com/@kakashicine/video/7626138618809060615" target="_blank">Clique para acessar o vídeo-modelo</a></div></div>
+  </div>
+</section>
+
+<!-- PASSO 1 -->
+<section>
+  <div class="container fade-in">
+    <div class="step-tag">PASSO 1</div>
+    <h2 class="step-title">TEMA</h2>
+    <p class="body-text">Procure um fato animal bizarro que tenha 3 ingredientes:</p>
+    <div class="step-item"><div class="step-dot"></div><div class="step-content"><strong>Contradição</strong> — o animal faz algo inesperado</div></div>
+    <div class="step-item"><div class="step-dot"></div><div class="step-content"><strong>Humanização</strong> — dá pra fazer paralelo com comportamento humano</div></div>
+    <div class="step-item"><div class="step-dot"></div><div class="step-content"><strong>Visual adaptado</strong> — as cenas precisam ser imagináveis e executadas na vida real</div></div>
+
+    <div class="info-box">
+      <div class="info-label">Ajuda da IA</div>
+      <div class="info-text">Você pode utilizar o Claude para te ajudar com ideias de temas.</div>
+    </div>
+
+    <div class="prompt-block">
+      <div class="prompt-header">
+        <span class="prompt-label">Prompt de tema</span>
+        <button class="copy-btn" onclick="copyPrompt(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar</button>
+      </div>
+      <div class="prompt-content">Me dê 10 fatos bizarros sobre animais que a maioria das pessoas não conhece. Cada fato precisa ter esses 3 elementos:
+
+1. CONTRADIÇÃO — o animal faz algo que contradiz o que você esperaria dele
+2. HUMANIZAÇÃO — dá pra fazer um paralelo direto com comportamento humano
+3. VISUAL FORTE — a cena é fácil de imaginar e impactante
+
+Formato de resposta para cada fato:
+- Animal:
+- Fato:
+- Por que viraliza:
+
+Foque em fatos que causem reações como "não é possível", "isso é real?" ou "eu nunca soube disso". Evite fatos óbvios como "golfinhos são inteligentes" ou "camaleões mudam de cor". Quero os fatos obscuros, perturbadores e surpreendentes.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PASSO 2 -->
+<section>
+  <div class="container fade-in">
+    <div class="step-tag">PASSO 2</div>
+    <h2 class="step-title">ROTEIRO</h2>
+    <p class="body-text">Use essa fórmula de 5 blocos. Cada bloco tem uma função específica na retenção do espectador:</p>
+
+    <div class="formula">
+      <div class="formula-num">2.1</div>
+      <div class="formula-title">Hook de contradição</div>
+      <div class="formula-desc">Quebre uma expectativa em 2 frases.</div>
+      <div class="formula-example">"Quando esse polvo está prestes a ser comido, ele não foge. Ele se transforma no predador."<br><br>"Quando golfinhos acham um baiacu, eles não matam, eles fazem algo muito mais estranho"<br><br>"Quando um corvo morre, os outros corvos não vão embora, eles fazem um funeral"</div>
+    </div>
+
+    <div class="formula">
+      <div class="formula-num">2.2</div>
+      <div class="formula-title">Stakes</div>
+      <div class="formula-desc">Estabeleça por que isso é impressionante. Mostre o perigo.</div>
+      <div class="formula-example">"Ele vive em fundo de areia aberta, sem nenhum lugar pra se esconder. Tem 60 centímetros, é mole, não tem osso, não tem veneno."</div>
+    </div>
+
+    <div class="formula">
+      <div class="formula-num">2.3</div>
+      <div class="formula-title">Loop de curiosidade</div>
+      <div class="formula-desc">Prenda o cérebro do espectador com uma pergunta ou afirmação que precisa de desenvolvimento.</div>
+      <div class="formula-example">"Mas então como ele sobrevive?"</div>
+    </div>
+
+    <div class="formula">
+      <div class="formula-num">2.4</div>
+      <div class="formula-title">Prova concreta</div>
+      <div class="formula-desc">Traga credibilidade. Data, fonte, detalhe específico.</div>
+      <div class="formula-example">"Em 1998, cientistas na Indonésia filmaram algo que ninguém nunca tinha visto antes."</div>
+    </div>
+
+    <div class="formula">
+      <div class="formula-num">2.5</div>
+      <div class="formula-title">Reveal</div>
+      <div class="formula-desc">Entregue o comportamento bizarro em camadas, do mais simples ao mais impressionante.</div>
+      <div class="formula-example">"Ele imita mais de 15 espécies. Abre os braços e vira um peixe-leão. Achata o corpo e nada como um linguado. Enfia seis braços num buraco e vira uma cobra marinha."</div>
+    </div>
+
+    <div class="info-box">
+      <div class="info-label">Ajuda da IA</div>
+      <div class="info-text">Você pode utilizar o Claude para te ajudar a criar um roteiro baseado no tema.</div>
+    </div>
+
+    <div class="prompt-block">
+      <div class="prompt-header">
+        <span class="prompt-label">Prompt de roteiro</span>
+        <button class="copy-btn" onclick="copyPrompt(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar</button>
+      </div>
+      <div class="prompt-content">Você é um roteirista de vídeos virais curtos (60 segundos) para TikTok/Reels. Abaixo estão roteiros reais que viralizaram no nicho de curiosidades animais. Estude a estrutura, o ritmo e as técnicas de retenção usadas neles.
+
+ROTEIRO REFERÊNCIA 1 — GOLFINHOS E BAIACU:
+When dolphins find a pufferfish, they dont kill it. They do something much stranger. Pufferfish are one of the deadliest animals in the ocean, carrying enough poison to kill 30 people. So why are dolphins lining up for a taste? In 2014, the BBC hid a camera inside a fake turtle. They watched as they passed the puffer fish around the circle, gently taking bites to release the toxin. The dolphins started to float to the surface, staring at their own reflections. It wasnt adults doing this. It was teenagers leaving their pods to meet up, find a pufferfish and get high together. Scientists said they handled the pufferfish like experts. They'd done this before. The pufferfish did actually survive the ride, but it did not enjoy the trip. Like and follow so we can keep making videos like this.
+
+ROTEIRO REFERÊNCIA 2 — POLVO-MÍMICO:
+When this octopus is about to be eaten, it doesnt run. It transforms into the predator. The mimic octopus lives in the most dangerous place possible: open sandy bottom, no reefs, no rocks, nowhere to hide. Its small — 60 centimeters —, soft, has no bones, no venom. It should be the easiest target in the ocean. So how does it survive? In 1998, scientists in Indonesia filmed something no one had ever seen before. This octopus can mimic over 15 different species of animals. It spreads its arms and becomes a lionfish — which is venomous. It flattens its body and swims like a sole — which is toxic. It shoves six arms into a hole, leaves two out, and becomes a sea snake — one of the deadliest in the ocean. But the most bizarre part isnt that it mimics. Its that it chooses who to mimic. When a damselfish attacks it, it transforms into the exact predator of that damselfish — the banded sea snake. It reads the situation and bluffs. Its like its playing poker with every predator that shows up.
+
+ROTEIRO REFERÊNCIA 3 — CORVOS E FUNERAIS:
+When a crow dies, other crows dont just leave. They hold a funeral. But they're not mourning. They're doing something much more disturbing. Crows are one of the smartest animals on the planet, capable of recognizing a face even years after seeing it just once. Scientists decided to test this, sending volunteers wearing masks to stand near dead crows. The crows werent grieving. They were studying the scene. Memorizing the face. For six weeks, every time that person came back, the crows attacked. When scientists scanned their brains, the part that lit up wasnt the fear center. It was the decision making center. They werent scared. They were calculating. The crows even told their friends, passing it down for years. Crows who never even saw the masked person started attacking them too. A group of crows is called a murder. And now you know why. Like and follow so we can keep making videos like this.
+
+A ESTRUTURA QUE FUNCIONA (5 blocos obrigatórios):
+
+1. HOOK DE CONTRADIÇÃO — Quebre uma expectativa em 2 frases curtas.
+"Quando esse polvo está prestes a ser comido, ele não foge. Ele se transforma no predador."
+"Quando golfinhos acham um baiacu, eles não matam. Eles fazem algo muito mais estranho."
+"Quando um corvo morre, os outros corvos não vão embora. Eles fazem um funeral."
+
+2. STAKES — Estabeleça por que isso é impressionante. Mostre o perigo ou o absurdo.
+"Ele vive em fundo de areia aberta, sem nenhum lugar pra se esconder. Tem 60 centímetros, é mole, não tem osso, não tem veneno."
+
+3. LOOP DE CURIOSIDADE — Prenda o cérebro do espectador com uma pergunta ou afirmação que precisa de desenvolvimento.
+"Mas então como ele sobrevive?"
+
+4. PROVA CONCRETA — Traga credibilidade. Data, fonte, detalhe específico.
+"Em 1998, cientistas na Indonésia filmaram algo que ninguém nunca tinha visto antes."
+
+5. REVEAL — Entregue o comportamento bizarro em camadas, escalando do mais simples ao mais impressionante. Inclua o paralelo humano no final — é aqui que o vídeo viraliza.
+"Ele imita mais de 15 espécies. Abre os braços e vira um peixe-leão. Achata o corpo e nada como um linguado. Enfia seis braços num buraco e vira uma cobra marinha. Mas o mais bizarro não é que ele imita. É que ele escolhe quem imitar. Ele lê a situação e blefa. É como se ele jogasse pôquer com cada predador que aparece."
+
+REGRAS:
+- Máximo 60 segundos de leitura lenta
+- Cada frase deve fazer a pessoa querer ouvir a próxima
+- Escreva em inglês, tom conversacional
+
+Agora escreva um roteiro seguindo essa estrutura sobre o seguinte tema: [COLE SEU TEMA AQUI]</div>
+    </div>
+  </div>
+</section>
+
+<!-- PASSO 3 -->
+<section>
+  <div class="container fade-in">
+    <div class="step-tag">PASSO 3</div>
+    <h2 class="step-title">CENAS</h2>
+    <p class="body-text">Agora que o estilo tá definido, pense em cada frase do roteiro como uma cena de papelão. Não ilustre o texto literalmente. A regra é: pense na versão criativa do fato e construa essa cena com papelão.</p>
+
+    <p class="body-text"><strong>Exemplos do que funciona:</strong></p>
+
+    <div class="formula">
+      <div class="formula-num">3.1</div>
+      <div class="formula-desc">"Ele não tem veneno" não vira uma imagem de um polvo sem veneno — vira o polvo de papelão numa máquina de raio-X de papelão com o resultado completamente vazio, sem esqueleto.</div>
+    </div>
+
+    <div class="formula">
+      <div class="formula-num">3.2</div>
+      <div class="formula-desc">"Ele joga pôquer com predadores" vira literalmente uma mesa de pôquer subaquática de papelão com o polvo segurando cartas de animais diferentes.</div>
+    </div>
+
+    <p class="body-text" style="margin-top:20px"><strong>A fórmula de cada frame:</strong> fato científico → como representar isso de modo claro e divertido? → construir essa cena com papelão.</p>
+
+    <div class="info-box">
+      <div class="info-label">Ajuda da IA</div>
+      <div class="info-text">Você pode utilizar a IA Claude para pensar num cenário que exemplifica visualmente o que está sendo dito no roteiro. Envie seu roteiro pronto ao Claude e peça que ele crie uma cena para cada frase.</div>
+    </div>
+
+    <div class="prompt-block">
+      <div class="prompt-header">
+        <span class="prompt-label">Prompt de cenas</span>
+        <button class="copy-btn" onclick="copyPrompt(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar</button>
+      </div>
+      <div class="prompt-content">Você é um diretor de arte especializado em vídeos virais no estilo Cardboard Cinema — dioramas artesanais feitos com papelão corrugado, googly eyes, feltro, papel crepom e props reais como gravetos e barbante.
+
+Vou te enviar um roteiro de vídeo curto (60 segundos). Sua tarefa:
+
+1. Separe o roteiro em frases individuais
+2. Para cada frase, crie uma ideia de cena visual no estilo Cardboard Cinema
+
+REGRA DE OURO PARA AS CENAS:
+Nunca ilustre o texto literalmente. Use esta fórmula:
+Fato do roteiro → Qual seria a versão humana disso? → Construa essa cena com papelão.
+
+EXEMPLOS DE COMO PENSAR:
+- "Ele não tem veneno" → Polvo de papelão numa máquina de raio-X de papelão com o resultado completamente vazio
+- "Eram adolescentes" → Golfinhos de papelão com boné, fone de ouvido e skate
+- "Ficaram chapados" → Golfinhos de papelão sentados ao redor de uma fogueira de gravetos com luz real
+- "Corvos memorizam rostos" → Corvo de papelão olhando um quadro de cortiça com fotos conectadas por fio vermelho tipo investigação do FBI
+- "Ele joga pôquer com predadores" → Mesa de pôquer subaquática de papelão com o polvo segurando cartas de animais
+
+FORMATO DE RESPOSTA:
+Para cada frase, responda assim:
+
+FRASE: "[frase do roteiro]"
+CENA: [descrição da cena]
+
+Agora desmonte este roteiro em cenas:
+
+[COLE SEU ROTEIRO AQUI]</div>
+    </div>
+  </div>
+</section>
+
+<!-- PASSO 4 -->
+<section>
+  <div class="container fade-in">
+    <div class="step-tag">PASSO 4</div>
+    <h2 class="step-title">PROMPTS</h2>
+
+    <p class="body-text"><strong>Estilo visual:</strong></p>
+    <p class="body-text">O estilo é Cardboard Cinema: dioramas artesanais feitos à mão com papelão corrugado real. Esse nicho é artesanal — o charme está na imperfeição, na textura visível, no feito à mão. Todo prompt precisa respeitar esses elementos:</p>
+
+    <p class="body-text"><strong>Materiais obrigatórios:</strong> papelão corrugado com textura visível, googly eyes de plástico em todos os personagens (é a assinatura do estilo), traços de caneta preta pra detalhes, feltro como chão (azul pra oceano, verde pra grama, bege pra areia), papel crepom amassado pra água e fogo, props reais como gravetos e barbante.</p>
+
+    <p class="body-text"><strong>Fotografia:</strong> macro photography com profundidade de campo rasa (bokeh), iluminação quente e direcional, formato vertical 9:16, resultado que pareça uma foto real de um diorama artesanal — nunca uma ilustração digital.</p>
+
+    <p class="body-text" style="margin-top:32px"><strong>Termos (em inglês) que ajudam a IA a entregar um bom resultado:</strong></p>
+
+    <div class="terms-section">
+      <div class="terms-title">Material (do que é feito)</div>
+      <div class="term-item">cardboard / corrugated cardboard cutouts<br>handmade<br>plastic googly eyes<br>white paper lab coats / white paper coat<br>matte cardboard textures<br>naming each prop individually as cardboard: cardboard pencil, cardboard magnifying glass, cardboard clipboard</div>
+    </div>
+
+    <div class="terms-section">
+      <div class="terms-title">Estética (identidade visual)</div>
+      <div class="term-item">A real photograph<br>handmade stop motion<br>theater aesthetic<br>@character style — using the reference as a style anchor</div>
+    </div>
+
+    <div class="terms-section">
+      <div class="terms-title">Controle (o que manter, o que mudar)</div>
+      <div class="term-item">Keep the structure exactly as<br>Modify the artistic tone to<br>Keep everything else the same<br>In the style of @image_reference<br>Replace X with Y</div>
+    </div>
+
+    <p class="body-text" style="margin-top:36px"><strong>Prompts de geração de imagem que funcionaram:</strong></p>
+
+    <!-- RESULT CARD 1 -->
+    <div class="result-card">
+      <div class="result-img"><img src="img/1.png" alt="Resultado 1"></div>
+      <div class="result-body">
+        <div class="result-tool">//PROMPT: Nano Bana Pro +IMG Ref</div>
+        <div class="result-prompt">"Replace the octopus with the character @character. Keep its structure exactly as @character. Modify the artistic tone to detailed cardboard, real photography, handmade."</div>
+        <button class="copy-btn" onclick="copyText(this, `Replace the octopus with the character @character. Keep its structure exactly as @character. Modify the artistic tone to detailed cardboard, real photography, handmade.`)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar Prompt</button>
+      </div>
+    </div>
+
+    <!-- RESULT CARD 2 -->
+    <div class="result-card">
+      <div class="result-img"><img src="img/2.png" alt="Resultado 2"></div>
+      <div class="result-body">
+        <div class="result-tool">//PROMPT: Nano Bana Pro +IMG Ref</div>
+        <div class="result-prompt">"In the style of @image_reference, make @character being attacked by a cardboard fish wearing a princess dress. The cardboard fish in a princess dress is handmade from cardboard and is attacking @character with a knife."</div>
+        <button class="copy-btn" onclick="copyText(this, `In the style of @image_reference, make @character being attacked by a cardboard fish wearing a princess dress. The cardboard fish in a princess dress is handmade from cardboard and is attacking @character with a knife.`)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar Prompt</button>
+      </div>
+    </div>
+
+    <!-- RESULT CARD 3 -->
+    <div class="result-card">
+      <div class="result-img"><img src="img/3.png" alt="Resultado 3"></div>
+      <div class="result-body">
+        <div class="result-tool">//PROMPT: Nano Bana Pro +IMG Ref</div>
+        <div class="result-prompt">"Make the character @character sitting in a realistic cinema chair with hyper-detailed red texture. Light the octopus sitting in the cinema chair so that the screen light reflects on the octopus. Style of @image_reference."</div>
+        <button class="copy-btn" onclick="copyText(this, `Make the character @character sitting in a realistic cinema chair with hyper-detailed red texture. Light the octopus sitting in the cinema chair so that the screen light reflects on the octopus. Style of @image_reference.`)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar Prompt</button>
+      </div>
+    </div>
+
+    <!-- RESULT CARD 4 -->
+    <div class="result-card">
+      <div class="result-img"><img src="img/4.png" alt="Resultado 4"></div>
+      <div class="result-body">
+        <div class="result-tool">//PROMPT: Nano Bana Pro +IMG Ref</div>
+        <div class="result-prompt">"Place a twin fish identical to the cardboard fish in proportions, but make the eyes and texture hyper-realistic. Keep everything else the same."</div>
+        <button class="copy-btn" onclick="copyText(this, `Place a twin fish identical to the cardboard fish in proportions, but make the eyes and texture hyper-realistic. Keep everything else the same.`)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar Prompt</button>
+      </div>
+    </div>
+
+    <!-- RESULT CARD 5 -->
+    <div class="result-card">
+      <div class="result-img"><img src="img/5.png" alt="Resultado 5"></div>
+      <div class="result-body">
+        <div class="result-tool">//PROMPT: Nano Bana Pro</div>
+        <div class="result-prompt">A real photograph of a handmade cardboard diorama. A group of three cardboard scientist figures with two plastic googly eyes each, wearing white paper lab coats, standing around a cardboard table covered in cardboard papers and tiny cardboard notebooks. One holds a cardboard pencil, another looks through a cardboard magnifying glass, the third points at a cardboard clipboard. Each scientist has a different hairstyle cut from cardboard. Small cardboard beakers and test tubes on the table. Handmade stop motion, theater aesthetic, matte cardboard textures. @character style</div>
+        <button class="copy-btn" onclick="copyText(this, `A real photograph of a handmade cardboard diorama. A group of three cardboard scientist figures with two plastic googly eyes each, wearing white paper lab coats, standing around a cardboard table covered in cardboard papers and tiny cardboard notebooks. One holds a cardboard pencil, another looks through a cardboard magnifying glass, the third points at a cardboard clipboard. Each scientist has a different hairstyle cut from cardboard. Small cardboard beakers and test tubes on the table. Handmade stop motion, theater aesthetic, matte cardboard textures. @character style`)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar Prompt</button>
+      </div>
+    </div>
+
+    <!-- RESULT CARD 6 -->
+    <div class="result-card">
+      <div class="result-img"><img src="img/6.png" alt="Resultado 6"></div>
+      <div class="result-body">
+        <div class="result-tool">//PROMPT: Nano Bana Pro</div>
+        <div class="result-prompt">A real photograph of a handmade cardboard diorama. @character standing inside a cardboard X-ray machine. On the cardboard X-ray screen, the scan shows a completely empty silhouette — no skeleton, no bones, just a hollow outline. Next to it on the wall, a second cardboard X-ray scan of a fish showing a detailed cardboard spine and rib bones. A small cardboard doctor figure with googly eyes and a white paper coat looks at the empty scan with a confused expression. Handmade, theater aesthetic, matte cardboard textures.</div>
+        <button class="copy-btn" onclick="copyText(this, `A real photograph of a handmade cardboard diorama. @character standing inside a cardboard X-ray machine. On the cardboard X-ray screen, the scan shows a completely empty silhouette — no skeleton, no bones, just a hollow outline. Next to it on the wall, a second cardboard X-ray scan of a fish showing a detailed cardboard spine and rib bones. A small cardboard doctor figure with googly eyes and a white paper coat looks at the empty scan with a confused expression. Handmade, theater aesthetic, matte cardboard textures.`)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar Prompt</button>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <div class="info-label">Ajuda da IA</div>
+      <div class="info-text">Você pode utilizar o Claude para transformar suas ideias de cena em prompts prontos para geração de imagem. Basta descrever a cena que você imaginou e pedir que ele escreva o prompt no estilo Cardboard Cinema.</div>
+    </div>
+
+    <div class="prompt-block">
+      <div class="prompt-header">
+        <span class="prompt-label">Prompt de geração de prompts</span>
+        <button class="copy-btn" onclick="copyPrompt(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar</button>
+      </div>
+      <div class="prompt-content">Você é um engenheiro de prompts especializado em geração de imagens no estilo Cardboard Cinema — dioramas artesanais feitos com papelão corrugado, googly eyes, feltro e props reais.
+
+Para cada cena abaixo, escreva um prompt de geração de imagem em inglês.
+
+BOAS PRÁTICAS QUE GERAM OS MELHORES RESULTADOS:
+
+Material — nomeie cada objeto individualmente como cardboard (cardboard shark, cardboard pencil, cardboard table). Use termos como: corrugated cardboard cutouts, handmade, plastic googly eyes, matte cardboard textures, white paper coat.
+
+Estética — ancore o visual com termos como: A real photograph, handmade stop motion, theater aesthetic. Se houver referência visual, use @character style ou In the style of @image_reference.
+
+Controle — seja cirúrgico no que muda e no que mantém. Use lógica como: Replace X with Y, Keep the structure exactly as, Modify the artistic tone to, Keep everything else the same.
+
+Geral — descreva o que EXISTE na cena, nunca use negações. Quanto mais específico o material de cada objeto, melhor o resultado.
+
+CENAS:
+
+Frase 1: [COLE A FRASE DO ROTEIRO]
+Cena: [DESCREVA A CENA QUE VOCÊ IMAGINOU]
+
+Frase 2: [COLE A FRASE DO ROTEIRO]
+Cena: [DESCREVA A CENA QUE VOCÊ IMAGINOU]
+
+Frase 3: [COLE A FRASE DO ROTEIRO]
+Cena: [DESCREVA A CENA QUE VOCÊ IMAGINOU]
+
+(Adicione mais linhas conforme necessário)
+
+Para cada cena, responda assim:
+FRASE: "[frase]"
+CENA:
+PROMPT: [prompt pronto para colar no gerador de imagem]</div>
+    </div>
+  </div>
+</section>
+
+<!-- PASSO 5 -->
+<section>
+  <div class="container fade-in">
+    <div class="step-tag">PASSO 5</div>
+    <h2 class="step-title">IMAGENS</h2>
+    <p class="body-text">Use o Nano Banana Pro, configure pra 9:16, cole o prompt e gere quantas variações quiser.</p>
+    <p class="body-text"><strong>Processo de iteração:</strong> A primeira geração dificilmente é a final. Analise o que saiu certo e o que precisa ajustar. Modifique apenas o que precisa mudar no prompt. Re-gere e compare. Quando estiver 80% bom, passe pro próximo frame.</p>
+    <p class="body-text"><strong>Dica avançada:</strong> Salve referências dos personagens num banco de dados (@polvo, @cenário). Isso mantém consistência visual entre os frames. Quando precisar do mesmo personagem em cenas diferentes, referencie o DB em vez de descrever do zero.</p>
+  </div>
+</section>
+
+<!-- PASSO 6 -->
+<section>
+  <div class="container fade-in">
+    <div class="step-tag">PASSO 6</div>
+    <h2 class="step-title">ANIME OS FRAMES</h2>
+    <p class="body-text">Com todas as imagens prontas, dê vida a elas. Use o Kling 3.0 ou equivalente para adicionar movimento aos frames estáticos. O objetivo não é criar um filme — é dar micro-movimentos que seguram atenção: partes do corpo do animal se mexendo, olhos googly tremendo, ondas de papel ondulando, sombras se aproximando lentamente, objetos pendurados em barbante balançando.</p>
+
+    <p class="body-text"><strong>First Frame + Last Frame:</strong> Para ter controle real da animação, use a técnica de primeiro e último frame. Você define a imagem inicial e a imagem final, e a IA gera o movimento entre elas. Isso evita movimentos aleatórios e garante que a animação faça exatamente o que você quer.</p>
+
+    <p class="body-text"><strong>Multi-shot:</strong> O Kling 3.0 oferece a opção de multi-shot, que permite criar sequências com cortes e ângulos diferentes dentro de um mesmo clip. Use para dar dinamismo em momentos-chave do vídeo — como no reveal ou no twist. Não abuse: um ou dois multi-shots por vídeo já é suficiente.</p>
+
+    <p class="body-text"><strong>Escreva seus próprios prompts de animação.</strong> A IA de texto não tem noção espacial do que acontece entre o primeiro e o segundo frame do seu vídeo — só você, olhando as duas imagens, sabe qual movimento faz sentido. Descreva a ação, a direção e feche com a âncora de estilo.</p>
+
+    <p class="body-text">Quanto mais específica a descrição do movimento, melhor. "A wind from right to left hits the animal" funciona melhor que "o animal se move". Adicione emoção quando fizer sentido: "looks nervously", "shifts in fear", "wiggles helplessly".</p>
+
+    <p class="body-text">Mantenha cada clip entre 2-4 segundos. Movimento exagerado quebra a estética artesanal. O charme do estilo é parecer stop motion — os movimentos devem ser contidos, como se alguém tivesse mexido o boneco com a mão entre cada frame. Sempre finalize o prompt com termos como: handmade stop motion, papercard style, paper craft theater aesthetic.</p>
+
+    <p class="body-text">Se precisar de ajuda para refinar um prompt de animação, envie ao Claude:</p>
+
+    <div class="prompt-block">
+      <div class="prompt-header">
+        <span class="prompt-label">Prompt de refinamento de animação</span>
+        <button class="copy-btn" onclick="copyPrompt(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar</button>
+      </div>
+      <div class="prompt-content">Meu prompt de animação atual é: [SEU PROMPT]
+A ação que eu quero é: [DESCREVA O MOVIMENTO]
+O primeiro frame mostra: [DESCREVA]
+O último frame mostra: [DESCREVA]
+
+Melhore o prompt mantendo termos como handmade stop motion, papercard style, paper craft theater aesthetic. Seja específico na direção e intensidade do movimento.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PASSO 7 -->
+<section>
+  <div class="container fade-in">
+    <div class="step-tag">PASSO 7</div>
+    <h2 class="step-title">MONTE NO CAPCUT</h2>
+    <p class="body-text">Importe todas as imagens e clipes animados na ordem do roteiro. Cada frame dura 2 a 4 segundos. Mantenha o conteúdo estimulante. A troca de imagem deve coincidir com a troca de frase.</p>
+
+    <div class="step-item"><div class="step-dot"></div><div class="step-content"><strong>Narração:</strong> grave seguindo o roteiro. Tom calmo, pausado, como quem conta um segredo. Pode usar IA (ElevenLabs) se preferir.</div></div>
+    <div class="step-item"><div class="step-dot"></div><div class="step-content"><strong>Música:</strong> trilha ambiente, atmosférica, sem vocal. Volume baixo — a voz é protagonista.</div></div>
+    <div class="step-item"><div class="step-dot"></div><div class="step-content"><strong>Legendas:</strong> estilo bold, centralizado na parte inferior. Branco com sombra. 2 a 4 palavras por tela.</div></div>
+    <div class="step-item"><div class="step-dot"></div><div class="step-content"><strong>Transições:</strong> corte seco. Sem efeitos fancy — o estilo artesanal pede simplicidade.</div></div>
+    <div class="step-item"><div class="step-dot"></div><div class="step-content"><strong>Exportação:</strong> 1080x1920 (ou superior), 9:16, 24fps (ou superior), qualidade máxima.</div></div>
+  </div>
+</section>
+
+<!-- PASSO 8 -->
+<section>
+  <div class="container fade-in">
+    <div class="step-tag">PASSO 8</div>
+    <h2 class="step-title">PUBLIQUE</h2>
+    <p class="body-text">Pode postar no TikTok, Shorts, Facebook e Reels simultaneamente.</p>
+    <p class="body-text">Mínimo de 1 publicação por semana.</p>
+    <p class="body-text">Algumas hashtags relevantes nesse modelo de conteúdo:<br><strong>#animation #shortstories #animals #(animal)</strong></p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div class="footer">
+  <img src="img/logo.png" alt="Editflow" style="height:40px">
+</div>
+
+<script>
+function copyPrompt(btn){
+  const content=btn.closest('.prompt-block').querySelector('.prompt-content').textContent;
+  doCopy(btn,content);
+}
+function copyText(btn,text){
+  doCopy(btn,text);
+}
+function doCopy(btn,text){
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.classList.add('copied');
+    const orig=btn.innerHTML;
+    btn.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Copiado!`;
+    setTimeout(()=>{btn.classList.remove('copied');btn.innerHTML=orig},2000);
+  });
+}
+const obs=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting)el.target.classList.add('visible')})},{threshold:0.1});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+</script>
+
+</body>
+</html>
