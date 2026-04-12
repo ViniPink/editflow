@@ -5,7 +5,6 @@
     { "src": "*.html", "use": "@vercel/static" },
     { "src": "rpm/**", "use": "@vercel/static" },
     { "src": "modelagem/**", "use": "@vercel/static" },
-    { "src": "modelagem/**", "use": "@vercel/static" },
     { "src": "videos/**", "use": "@vercel/static" }
   ],
   "routes": [
@@ -14,6 +13,7 @@
     { "src": "/videos/(.*)", "dest": "/videos/$1" },
     { "src": "/rpm", "dest": "/rpm/index.html" },
     { "src": "/modelagem/cardboard", "dest": "/modelagem/cardboard/index.html" },
+    { "src": "/modelagem/cardboard/(.*)", "dest": "/modelagem/cardboard/$1" },
     { "src": "/sucesso", "dest": "/sucesso.html" },
     { "src": "/", "dest": "/index.html" }
   ]
