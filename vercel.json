@@ -4,6 +4,8 @@
     { "src": "api/**/*.js", "use": "@vercel/node" },
     { "src": "*.html", "use": "@vercel/static" },
     { "src": "rpm/**", "use": "@vercel/static" },
+    { "src": "modelagem/**", "use": "@vercel/static" },
+    { "src": "modelagem/**", "use": "@vercel/static" },
     { "src": "videos/**", "use": "@vercel/static" }
   ],
   "routes": [
@@ -11,6 +13,7 @@
     { "src": "/api/create-mp-payment", "dest": "/api/create-mp-payment.js" },
     { "src": "/videos/(.*)", "dest": "/videos/$1" },
     { "src": "/rpm", "dest": "/rpm/index.html" },
+    { "src": "/modelagem/cardboard", "dest": "/modelagem/cardboard/index.html" },
     { "src": "/sucesso", "dest": "/sucesso.html" },
     { "src": "/", "dest": "/index.html" }
   ]
