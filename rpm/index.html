@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de RPM | Editflow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --blue: #2D7AFF;
+    --blue-glow: rgba(45, 122, 255, 0.25);
+    --bg: #0A0A0F;
+    --card: #12121A;
+    --border: #1E1E2A;
+    --text: #E8E8EE;
+    --muted: #6B6B80;
+    --green: #34D399;
+  }
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px 40px;
+    overflow-x: hidden;
+  }
+
+  .container { width: 100%; max-width: 420px; }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 3px;
+    text-align: center;
+    margin-bottom: 8px;
+    color: var(--blue);
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.4rem;
+    letter-spacing: 1px;
+    text-align: center;
+    margin-bottom: 6px;
+    line-height: 1;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 32px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 24px;
+    margin-bottom: 20px;
+  }
+
+  .field { margin-bottom: 20px; }
+  .field:last-child { margin-bottom: 0; }
+
+  label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  input[type="number"] {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -moz-appearance: textfield;
+  }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+  input[type="number"]:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px var(--blue-glow);
+  }
+
+  input::placeholder { color: #333346; }
+
+  .suffix {
+    position: absolute;
+    right: 16px;
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-weight: 500;
+    pointer-events: none;
+  }
+
+  .helper {
+    margin-top: 8px;
+    font-size: 0.82rem;
+    color: var(--blue);
+    font-weight: 500;
+    min-height: 1.2em;
+  }
+
+  /* Slider */
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .slider-row input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    outline: none;
+  }
+
+  .slider-row input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--blue);
+    cursor: pointer;
+    box-shadow: 0 0 10px var(--blue-glow);
+  }
+
+  .slider-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    color: var(--text);
+    min-width: 52px;
+    text-align: right;
+  }
+
+  .slider-helper {
+    margin-top: 6px;
+    font-size: 0.82rem;
+    color: var(--muted);
+    min-height: 1.2em;
+  }
+
+  .readonly-field {
+    opacity: 0.6;
+    cursor: default;
+  }
+
+  /* Results */
+  .result-card {
+    background: var(--card);
+    border: 1px solid var(--blue);
+    border-radius: 16px;
+    padding: 28px 24px;
+    text-align: center;
+    box-shadow: 0 0 40px var(--blue-glow);
+  }
+
+  .result-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .result-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.6rem;
+    color: var(--blue);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .result-unit {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .divider {
+    width: 40px;
+    height: 1px;
+    background: var(--border);
+    margin: 16px auto;
+  }
+
+  .sub-result .result-value { font-size: 2.4rem; }
+  .sub-result .result-value.brl { color: var(--green); }
+
+  .formula {
+    margin-top: 20px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+  }
+  .formula span { color: var(--blue); }
+
+  /* Exchange footer */
+  .exchange-footer {
+    margin-top: 24px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .exchange-left {
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+
+  .exchange-right { text-align: right; }
+
+  .exchange-rate {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    color: var(--green);
+    line-height: 1;
+  }
+
+  .exchange-date {
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .cta {
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+    padding: 16px;
+    background: var(--blue);
+    color: #fff;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px var(--blue-glow);
+  }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 2rem; }
+    .result-value { font-size: 3rem; }
+    .sub-result .result-value { font-size: 2rem; }
+    .card { padding: 22px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="logo">EDITFLOW</div>
+  <h1>CALCULADORA DE RPM</h1>
+  <p class="subtitle">Descubra quanto seu conteúdo rende por 1.000 views</p>
+
+  <div class="card">
+    <!-- RPM -->
+    <div class="field">
+      <label>RPM (Slide)</label>
+      <div class="input-wrap">
+        <input type="number" id="rpm" placeholder="0.50" step="0.01" oninput="calc()">
+        <span class="suffix">USD</span>
+      </div>
+    </div>
+
+    <!-- Views em milhões -->
+    <div class="field">
+      <label>Visualizações (em milhões)</label>
+      <div class="input-wrap">
+        <input type="number" id="views" placeholder="0.6" step="0.01" oninput="calc()">
+        <span class="suffix">M</span>
+      </div>
+      <div class="helper" id="viewsHelper"></div>
+    </div>
+
+    <!-- % Qualificado -->
+    <div class="field">
+      <label>% Visualizações qualificadas</label>
+      <div class="slider-row">
+        <input type="range" id="qualPct" min="1" max="100" value="100" oninput="updateSlider(); calc();">
+        <span class="slider-val" id="qualVal">100%</span>
+      </div>
+      <div class="slider-helper" id="qualHelper"></div>
+    </div>
+
+    <!-- Ganhos totais (auto) -->
+    <div class="field">
+      <label>Ganhos totais (calculado)</label>
+      <div class="input-wrap">
+        <input type="number" id="earnings" placeholder="—" readonly class="readonly-field">
+        <span class="suffix">USD</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resultados -->
+  <div class="result-card">
+    <div class="result-label">Ganho estimado</div>
+    <div class="result-value" id="resultUSD">—</div>
+    <div class="result-unit">USD</div>
+
+    <div class="divider"></div>
+
+    <div class="sub-result">
+      <div class="result-label">Convertido em Real</div>
+      <div class="result-value brl" id="resultBRL">—</div>
+      <div class="result-unit">BRL (cotação atual)</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="sub-result">
+      <div class="result-label">Views qualificadas</div>
+      <div class="result-value" id="resultQual" style="font-size:2rem;">—</div>
+      <div class="result-unit">de <span id="resultTotal">—</span> totais</div>
+    </div>
+  </div>
+
+  <div class="formula">Ganho = (<span>RPM</span> × <span>Views qualificadas</span>) ÷ 1.000</div>
+
+  <!-- Cotação -->
+  <div class="exchange-footer">
+    <div class="exchange-left">
+      USD → BRL<br>
+      <span style="font-size:0.7rem; font-weight:400; letter-spacing:0;">Dólar comercial</span>
+    </div>
+    <div class="exchange-right">
+      <div class="exchange-rate">R$ 5,02</div>
+      <div class="exchange-date">10/04/2026 — referência</div>
+    </div>
+  </div>
+
+  <a class="cta" href="https://editflow.com.br" target="_blank">APRENDA A CRIAR CONTEÚDO COM IA →</a>
+</div>
+
+<script>
+const EXCHANGE_RATE = 5.02;
+
+function fmt(n) {
+  return n.toLocaleString('pt-BR');
+}
+
+function updateSlider() {
+  document.getElementById('qualVal').textContent = document.getElementById('qualPct').value + '%';
+}
+
+function calc() {
+  const rpm = parseFloat(document.getElementById('rpm').value);
+  const viewsM = parseFloat(document.getElementById('views').value);
+  const qualPct = parseInt(document.getElementById('qualPct').value);
+
+  const viewsHelper = document.getElementById('viewsHelper');
+  const qualHelper = document.getElementById('qualHelper');
+  const resultUSD = document.getElementById('resultUSD');
+  const resultBRL = document.getElementById('resultBRL');
+  const resultQual = document.getElementById('resultQual');
+  const resultTotal = document.getElementById('resultTotal');
+  const earningsField = document.getElementById('earnings');
+
+  // Views helper
+  if (viewsM > 0) {
+    viewsHelper.textContent = '= ' + fmt(Math.round(viewsM * 1000000)) + ' visualizações';
+  } else {
+    viewsHelper.textContent = '';
+  }
+
+  // Qual helper
+  if (viewsM > 0) {
+    const qv = Math.round(viewsM * 1000000 * (qualPct / 100));
+    qualHelper.textContent = fmt(qv) + ' views qualificadas';
+  } else {
+    qualHelper.textContent = '';
+  }
+
+  if (!rpm || !viewsM || viewsM === 0) {
+    resultUSD.textContent = '—';
+    resultBRL.textContent = '—';
+    resultQual.textContent = '—';
+    resultTotal.textContent = '—';
+    earningsField.value = '';
+    return;
+  }
+
+  const totalViews = viewsM * 1000000;
+  const qualifiedViews = totalViews * (qualPct / 100);
+  const ganhoUSD = (rpm * qualifiedViews) / 1000;
+  const ganhoBRL = ganhoUSD * EXCHANGE_RATE;
+
+  earningsField.value = ganhoUSD.toFixed(2);
+  resultUSD.textContent = '$' + fmt(parseFloat(ganhoUSD.toFixed(2)));
+  resultBRL.textContent = 'R$ ' + fmt(parseFloat(ganhoBRL.toFixed(2)));
+  resultQual.textContent = fmt(Math.round(qualifiedViews));
+  resultTotal.textContent = fmt(Math.round(totalViews));
+}
+</script>
+
+</body>
+</html>

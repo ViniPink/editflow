@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Editflow — Modelagem Cardboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:#141414}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:3px}
+*{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.15) #141414}
+
+body{
+  font-family:'Poppins',sans-serif;
+  background:#141414;color:#fff;line-height:1.5;
+}
+
+/* ---- TOP BAR ---- */
+.topbar{
+  max-width:900px;margin:0 auto;
+  display:flex;align-items:center;
+  padding:16px 38px;background:#0D0D0D;
+}
+.topbar-logo{height:28px;width:auto}
+
+/* ---- HERO ---- */
+.hero{
+  background:#00B2FF;
+}
+.hero-inner{
+  max-width:900px;margin:0 auto;
+  padding:24px 38px 20px;
+  display:flex;align-items:flex-end;justify-content:space-between;
+  gap:32px;position:relative;
+}
+.hero-text{flex:1}
+.hero-eyebrow{
+  font-size:12.6px;font-weight:700;letter-spacing:10.46px;
+  text-transform:uppercase;color:#fff;
+  margin-bottom:0;
+}
+.hero-title{
+  font-size:45.91px;font-weight:700;
+  letter-spacing:3.67px;line-height:69.63px;
+  color:#fff;
+}
+.hero-img{
+  width:151px;height:186px;flex-shrink:0;
+  object-fit:cover;
+  box-shadow:0px 4.66px 0px -9.33px rgba(0,0,0,0.24);
+}
+@media(max-width:600px){
+  .hero{flex-direction:column;align-items:flex-start;padding:32px 20px}
+  .hero-img{width:120px}
+}
+
+/* ---- SECTION BLOCK ---- */
+.section-block{
+  max-width:900px;margin:0 auto;
+  padding:0 38px;
+}
+@media(max-width:600px){.section-block{padding:0 20px}}
+
+/* ---- CYAN HEADER ---- */
+.cyan-header{color:#fff;position:relative;z-index:1;
+  display:inline-block;
+  background:#00B2FF;color:#fff;
+  font-size:18px;font-weight:700;
+  padding:3px 12px;margin:24px 0 12px;
+  border-radius:0;
+}
+
+/* ---- TEXT STYLES ---- */
+.body-text{
+  font-size:14.84px;color:rgba(255,255,255,0.85);
+  margin-bottom:8px;max-width:680px;
+}
+.body-text strong{color:#fff;font-weight:600}
+.body-text a,.tool-row a{color:#5ED4FF;text-decoration:underline}
+.body-text a:hover{text-decoration:underline}
+
+.tool-row{line-height:1.4;padding-left:8px;
+  font-size:14.84px;color:rgba(255,255,255,0.85);
+  padding:5px 0;
+}
+.tool-row::before{content:'>';display:inline-block;margin-right:8px;color:#fff;font-weight:700}
+.tool-row strong{color:#fff;font-weight:600}
+
+.alert-box{color:rgba(255,255,255,0.85);
+  font-size:0.8rem;
+  margin-top:12px;line-height:1.6;
+}
+.alert-box::before{content:'🚨 '}
+
+/* ---- STEP GRID ---- */
+.step-grid{
+  max-width:900px;margin:40px auto 16px;
+  padding:0 38px;
+  display:flex;flex-direction:column;gap:10px;
+}
+@media(max-width:600px){.step-grid{padding:0 20px}}
+
+.step-card{
+  background:#272727;border:2px solid #000;
+  border-radius:12px;overflow:hidden;
+  box-shadow:0px 4px 4px rgba(0,0,0,0.25);transition:border-color 0.3s;
+}
+.step-card:hover{border-color:#333}
+.step-card-header{
+  display:flex;align-items:center;gap:14px;
+  padding:16px 20px;cursor:pointer;user-select:none;
+}
+.step-icon{
+  width:27px;height:27px;border-radius:5.5px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;flex-shrink:0;
+  background:#000;box-shadow:0px 4px 4px rgba(0,0,0,0.25);overflow:hidden;
+.step-icon-img{width:27px;height:27px;object-fit:cover;border-radius:5.5px}
+}
+.step-card-header h2{
+  font-size:19.3px;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.5px;
+  flex:1;
+}
+.chevron{
+  width:18px;height:18px;color:rgba(255,255,255,0.3);
+  transition:transform 0.3s;flex-shrink:0;
+}
+.step-card.open .chevron{transform:rotate(180deg)}
+.step-body{max-height:0;overflow:hidden;transition:max-height 0.5s ease}
+.step-card.open .step-body{max-height:30000px}
+.step-content{
+  padding:4px 20px 24px;
+  border-top:1px solid #333;
+}
+
+/* Step icon colors */
+
+/* ---- INNER CONTENT ---- */
+.inner-block{margin-top:20px}
+.inner-title{
+  font-size:0.65rem;font-weight:700;letter-spacing:2.5px;
+  text-transform:uppercase;color:#00B2FF;margin-bottom:10px;
+}
+.inner-text{
+  font-size:0.85rem;color:rgba(255,255,255,0.85);
+  margin-bottom:8px;
+}
+.inner-text strong{color:#fff;font-weight:600}
+
+.inner-list{list-style:none;padding:0}
+.inner-list li{
+  font-size:0.85rem;color:rgba(255,255,255,0.85);
+  padding:5px 0;display:flex;align-items:flex-start;gap:8px;
+}
+.inner-list li::before{content:'—';color:#00B2FF;font-weight:700;flex-shrink:0}
+.inner-list li strong{color:#fff;font-weight:600}
+
+.example-box{
+  border-left:3px solid #00B2FF;
+  padding:10px 16px;margin:10px 0;
+  background:rgba(0,212,232,0.04);
+  border-radius:0 6px 6px 0;
+  font-size:0.84rem;color:rgba(255,255,255,0.9);
+  font-style:italic;
+}
+.example-box strong{font-style:normal;color:#fff}
+
+.sub-block{
+  margin-top:14px;padding:14px 18px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:6px;
+}
+.sub-block-title{
+  font-size:0.8rem;font-weight:700;color:#fff;margin-bottom:4px;
+}
+.sub-block p{font-size:0.82rem;color:rgba(255,255,255,0.85)}
+
+.tip-box{
+  background:rgba(67,97,238,0.08);
+  border:1px solid rgba(67,97,238,0.15);
+  border-radius:6px;padding:12px 16px;margin:14px 0;
+  font-size:0.82rem;color:rgba(255,255,255,0.85);
+}
+.tip-box strong{color:#4361EE}
+
+/* ---- PROMPT EXAMPLES GRID ---- */
+.prompt-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;
+  margin-top:12px;
+}
+@media(max-width:600px){.prompt-grid{grid-template-columns:1fr}}
+.prompt-example{
+  background:#0D0D0D;border-radius:8px;
+  padding:14px;overflow:hidden;
+}
+.prompt-example-label{
+  font-size:0.6rem;font-weight:700;letter-spacing:1.5px;
+  color:rgba(255,255,255,0.4);margin-bottom:8px;
+}
+.prompt-example-img{
+  width:100%;height:auto;border-radius:4px;
+  margin-bottom:10px;
+}
+.prompt-example-meta{
+  font-size:0.6rem;font-weight:600;letter-spacing:1px;
+  color:#00B2FF;margin-bottom:6px;
+}
+.prompt-example-text{
+  font-size:0.78rem;color:rgba(255,255,255,0.7);
+  line-height:1.5;margin-bottom:10px;
+}
+.copy-btn-inline{
+  font-family:'Poppins',sans-serif;font-size:0.55rem;font-weight:600;
+  letter-spacing:1px;text-transform:uppercase;
+  padding:5px 12px;border:1px solid rgba(255,255,255,0.12);
+  border-radius:3px;background:transparent;color:rgba(255,255,255,0.4);
+  cursor:pointer;transition:all 0.2s;
+}
+.copy-btn-inline:hover{border-color:#00B2FF;color:#00B2FF}
+
+/* ---- PROMPT BOX ---- */
+.prompt-box{
+  background:#0D0D0D;
+  border:1px solid #272727;
+  border-radius:8px;padding:20px 20px 44px;
+  margin:14px 0;position:relative;
+  font-size:0.8rem;line-height:1.5;
+  color:rgba(255,255,255,0.85);
+  white-space:pre-wrap;word-wrap:break-word;
+}
+.prompt-label{
+  position:absolute;top:8px;right:14px;
+  font-size:0.5rem;font-weight:700;letter-spacing:2px;
+  color:#00B2FF;opacity:0.5;
+}
+.copy-btn{
+  position:absolute;bottom:10px;right:12px;
+  font-family:'Poppins',sans-serif;font-size:0.58rem;font-weight:600;
+  letter-spacing:1.5px;text-transform:uppercase;
+  padding:6px 14px;border:1px solid rgba(255,255,255,0.12);
+  border-radius:3px;background:transparent;color:rgba(255,255,255,0.4);
+  cursor:pointer;transition:all 0.2s;
+}
+.copy-btn:hover{border-color:#00B2FF;color:#00B2FF}
+
+/* ---- FOOTER ---- */
+.footer{
+  background:#00B2FF;
+  text-align:center;padding:12px 32px;
+  margin-top:40px;
+}
+.footer-logo{height:28px;opacity:1;display:inline-block}
+
+/* ---- PRINT ---- */
+@media print{
+  body{background:#141414;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .step-card .step-body{max-height:none!important;overflow:visible!important}
+  .step-card .chevron,.copy-btn{display:none}
+  .sub-block,.inner-block{page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <img src="img/logo.png" alt="Editflow" class="topbar-logo">
+</div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-eyebrow">M O D E L A G E M</div>
+      <div class="hero-title">CARDBOARD</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block">
+  <div class="cyan-header">Sobre o nicho:</div>
+  <p class="body-text">No nicho animal artesanal informativo você cria imagens com inteligência artificial que parecem feitas a mão e cria roteiros envolta de fatos interessantes sobre o mundo animal.</p>
+  <p class="body-text">É um nicho específico, portanto, lembre-se: <strong>Você pode adaptar cada um dos pilares desse nicho para criar a sua própria versão original.</strong> Modelar é sempre melhor que copiar.</p>
+
+  <div class="cyan-header">Ferramentas necessárias pra criação:</div>
+  <div class="tool-row"><strong>Claude:</strong> Ideias, roteiro e prompt</div>
+  <div class="tool-row"><strong>Geração de imagens:</strong> Nano Banana Pro</div>
+  <div class="tool-row"><strong>Geração de Vídeo:</strong> Kling 3.0</div>
+  <div class="alert-box">As IA's de geração de imagem e vídeo podem ser substituídas pelo manuseio de IA's locais no ComfyUI caso você tenha poder computacional e conhecimento de IA local.</div>
+  <div class="tool-row" style="margin-top:12px"><strong>Capcut:</strong> Edição de Vídeos</div>
+
+  <div class="cyan-header">Conta de modelagem:</div>
+  <div class="tool-row"><strong>TikTok:</strong> <a href="#">[Conta original]</a></div>
+  <div class="tool-row"><strong>Vídeo modelo:</strong> <a href="#">[Clique para acessar o vídeo-modelo]</a></div>
+</div>
+
+<div class="step-grid">
+
+<!-- 1. TEMA -->
+<div class="step-card" id="step1">
+  <div class="step-card-header" onclick="toggle(this)">
+    <div class="step-icon"><img src="img/icon-1.png" class="step-icon-img"></div>
+    <h2>1. Tema</h2>
+    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+  </div>
+  <div class="step-body"><div class="step-content">
+    <div class="inner-block">
+      <p class="inner-text">Procure um fato animal bizarro que tenha 3 ingredientes:</p>
+      <ul class="inner-list">
+        <li><strong>Contradição</strong> — o animal faz algo inesperado</li>
+        <li><strong>Humanização</strong> — dá pra fazer paralelo com comportamento humano</li>
+        <li><strong>Visual forte</strong> — as cenas precisam ser imagináveis e executáveis</li>
+      </ul>
+    </div>
+    <div class="inner-block">
+      <div class="inner-title">Prompt de tema</div>
+      <p class="inner-text">Use o Claude para gerar ideias de temas:</p>
+      <div class="prompt-box"><span class="prompt-label">PROMPT</span>Me dê 10 fatos bizarros sobre animais que a maioria das pessoas não conhece. Cada fato precisa ter esses 3 elementos:
+
+1. CONTRADIÇÃO — o animal faz algo que contradiz o que você esperaria dele
+2. HUMANIZAÇÃO — dá pra fazer um paralelo direto com comportamento humano
+3. VISUAL FORTE — a cena é fácil de imaginar e impactante
+
+Formato de resposta para cada fato:
+- Animal:
+- Fato:
+- Por que viraliza:
+
+Foque em fatos que causem reações como "não é possível", "isso é real?" ou "eu nunca soube disso". Evite fatos óbvios como "golfinhos são inteligentes" ou "camaleões mudam de cor". Quero os fatos obscuros, perturbadores e surpreendentes.<button class="copy-btn" onclick="copyPrompt(this)">Copiar</button></div>
+    </div>
+  </div></div>
+</div>
+
+<!-- 2. ROTEIRO -->
+<div class="step-card" id="step2">
+  <div class="step-card-header" onclick="toggle(this)">
+    <div class="step-icon"><img src="img/icon-2.png" class="step-icon-img"></div>
+    <h2>2. Roteiro</h2>
+    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+  </div>
+  <div class="step-body"><div class="step-content">
+    <div class="inner-block">
+      <div class="inner-title">Fórmula de 5 blocos</div>
+      <p class="inner-text">Cada bloco tem uma função específica na retenção do espectador:</p>
+    </div>
+
+    <div class="sub-block"><div class="sub-block-title">[2.1] Hook de contradição</div><p>Quebre uma expectativa em 2 frases.</p></div>
+    <div class="example-box"><strong>"Quando esse polvo está prestes a ser comido, ele não foge. Ele se transforma no predador."</strong></div>
+    <div class="example-box"><strong>"Quando golfinhos acham um baiacu, eles não matam. Eles fazem algo muito mais estranho."</strong></div>
+    <div class="example-box"><strong>"Quando um corvo morre, os outros corvos não vão embora. Eles fazem um funeral."</strong></div>
+
+    <div class="sub-block"><div class="sub-block-title">[2.2] Stakes</div><p>Estabeleça por que isso é impressionante. Mostre o perigo ou o absurdo.</p></div>
+    <div class="example-box"><strong>"Ele vive em fundo de areia aberta, sem nenhum lugar pra se esconder. Tem 60 centímetros, é mole, não tem osso, não tem veneno."</strong></div>
+
+    <div class="sub-block"><div class="sub-block-title">[2.3] Loop de curiosidade</div><p>Prenda o cérebro do espectador com uma pergunta que precisa de desenvolvimento.</p></div>
+    <div class="example-box"><strong>"Mas então como ele sobrevive?"</strong></div>
+
+    <div class="sub-block"><div class="sub-block-title">[2.4] Prova concreta</div><p>Traga credibilidade. Data, fonte, detalhe específico.</p></div>
+    <div class="example-box"><strong>"Em 1998, cientistas na Indonésia filmaram algo que ninguém nunca tinha visto antes."</strong></div>
+
+    <div class="sub-block"><div class="sub-block-title">[2.5] Reveal</div><p>Entregue o comportamento bizarro em camadas, do mais simples ao mais impressionante. Inclua o paralelo humano no final — é aqui que o vídeo viraliza.</p></div>
+    <div class="example-box"><strong>"Ele imita mais de 15 espécies. Abre os braços e vira um peixe-leão. Achata o corpo e nada como um linguado. Enfia seis braços num buraco e vira uma cobra marinha. Mas o mais bizarro não é que ele imita. É que ele escolhe quem imitar."</strong></div>
+
+    <div class="inner-block">
+      <div class="inner-title">Prompt de roteiro</div>
+      <div class="prompt-box"><span class="prompt-label">PROMPT</span>Você é um roteirista de vídeos virais curtos (60 segundos) para TikTok/Reels. Abaixo estão roteiros reais que viralizaram no nicho de curiosidades animais. Estude a estrutura, o ritmo e as técnicas de retenção usadas neles.
+
+ROTEIRO REFERÊNCIA 1 — GOLFINHOS E BAIACU:
+When dolphins find a pufferfish, they dont kill it. They do something much stranger. Pufferfish are one of the deadliest animals in the ocean, carrying enough poison to kill 30 people. So why are dolphins lining up for a taste? In 2014, the BBC hid a camera inside a fake turtle. They watched as they passed the puffer fish around the circle, gently taking bites to release the toxin. The dolphins started to float to the surface, staring at their own reflections. It wasnt adults doing this. It was teenagers leaving their pods to meet up, find a pufferfish and get high together.
+
+ROTEIRO REFERÊNCIA 2 — POLVO-MÍMICO:
+When this octopus is about to be eaten, it doesnt run. It transforms into the predator. The mimic octopus lives in the most dangerous place possible: open sandy bottom, no reefs, no rocks, nowhere to hide. So how does it survive? In 1998, scientists in Indonesia filmed something no one had ever seen before. This octopus can mimic over 15 different species. It reads the situation and bluffs. Its like its playing poker with every predator that shows up.
+
+ROTEIRO REFERÊNCIA 3 — CORVOS E FUNERAIS:
+When a crow dies, other crows dont just leave. They hold a funeral. But theyre not mourning. Theyre doing something much more disturbing. Scientists sent volunteers wearing masks to stand near dead crows. The crows werent grieving. They were studying the scene. Memorizing the face. A group of crows is called a murder. And now you know why.
+
+A ESTRUTURA QUE FUNCIONA (5 blocos obrigatórios):
+1. HOOK DE CONTRADIÇÃO — Quebre uma expectativa em 2 frases curtas.
+2. STAKES — Estabeleça por que isso é impressionante.
+3. LOOP DE CURIOSIDADE — Pergunta que precisa de desenvolvimento.
+4. PROVA CONCRETA — Data, fonte, detalhe específico.
+5. REVEAL — Comportamento bizarro em camadas + paralelo humano.
+
+REGRAS:
+- Máximo 60 segundos de leitura lenta
+- Cada frase deve fazer a pessoa querer ouvir a próxima
+- Escreva em inglês, tom conversacional
+
+Agora escreva um roteiro seguindo essa estrutura sobre o seguinte tema: [COLE SEU TEMA AQUI]<button class="copy-btn" onclick="copyPrompt(this)">Copiar</button></div>
+    </div>
+  </div></div>
+</div>
+
+<!-- 3. CENAS -->
+<div class="step-card" id="step3">
+  <div class="step-card-header" onclick="toggle(this)">
+    <div class="step-icon"><img src="img/icon-3.png" class="step-icon-img"></div>
+    <h2>3. Cenas</h2>
+    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+  </div>
+  <div class="step-body"><div class="step-content">
+    <div class="inner-block">
+      <p class="inner-text">Pense em cada frase do roteiro como uma cena de papelão. <strong>Não ilustre o texto literalmente.</strong></p>
+      <p class="inner-text">Fórmula: <strong>fato científico → como representar de modo claro e divertido? → construir essa cena com papelão.</strong></p>
+    </div>
+    <div class="inner-block">
+      <div class="inner-title">Exemplos do que funciona</div>
+      <div class="example-box"><strong>"Ele não tem veneno"</strong> → polvo de papelão numa máquina de raio-X de papelão com o resultado completamente vazio, sem esqueleto</div>
+      <div class="example-box"><strong>"Ele joga pôquer com predadores"</strong> → mesa de pôquer subaquática de papelão com o polvo segurando cartas de animais diferentes</div>
+    </div>
+    <div class="inner-block">
+      <div class="inner-title">Prompt de cenas</div>
+      <div class="prompt-box"><span class="prompt-label">PROMPT</span>Você é um diretor de arte especializado em vídeos virais no estilo Cardboard Cinema — dioramas artesanais feitos com papelão corrugado, googly eyes, feltro, papel crepom e props reais como gravetos e barbante.
+
+Vou te enviar um roteiro de vídeo curto (60 segundos). Sua tarefa:
+1. Separe o roteiro em frases individuais
+2. Para cada frase, crie uma ideia de cena visual no estilo Cardboard Cinema
+
+REGRA DE OURO PARA AS CENAS:
+Nunca ilustre o texto literalmente. Use esta fórmula:
+Fato do roteiro → Qual seria a versão humana disso? → Construa essa cena com papelão.
+
+EXEMPLOS:
+- "Ele não tem veneno" → Polvo de papelão numa máquina de raio-X de papelão com o resultado completamente vazio
+- "Eram adolescentes" → Golfinhos de papelão com boné, fone de ouvido e skate
+- "Corvos memorizam rostos" → Corvo de papelão olhando um quadro de cortiça com fotos conectadas por fio vermelho tipo investigação do FBI
+
+FORMATO DE RESPOSTA:
+FRASE: "[frase do roteiro]"
+CENA: [descrição da cena]
+
+Agora desmonte este roteiro em cenas:
+[COLE SEU ROTEIRO AQUI]<button class="copy-btn" onclick="copyPrompt(this)">Copiar</button></div>
+    </div>
+  </div></div>
+</div>
+
+<!-- 4. PROMPTS -->
+<div class="step-card" id="step4">
+  <div class="step-card-header" onclick="toggle(this)">
+    <div class="step-icon"><img src="img/icon-4.png" class="step-icon-img"></div>
+    <h2>4. Prompts</h2>
+    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+  </div>
+  <div class="step-body"><div class="step-content">
+    <div class="inner-block">
+      <div class="inner-title">Estilo visual</div>
+      <p class="inner-text">O estilo é <strong>Cardboard Cinema</strong>: dioramas artesanais feitos à mão com papelão corrugado real. O charme está na imperfeição, na textura visível, no feito à mão.</p>
+    </div>
+    <div class="inner-block">
+      <div class="inner-title">Materiais obrigatórios</div>
+      <ul class="inner-list">
+        <li>Papelão corrugado com textura visível</li>
+        <li>Googly eyes de plástico em todos os personagens (assinatura do estilo)</li>
+        <li>Traços de caneta preta pra detalhes</li>
+        <li>Feltro como chão (azul → oceano, verde → grama, bege → areia)</li>
+        <li>Papel crepom amassado pra água e fogo</li>
+        <li>Props reais como gravetos e barbante</li>
+      </ul>
+    </div>
+    <div class="inner-block">
+      <div class="inner-title">Fotografia</div>
+      <p class="inner-text">Macro photography com profundidade de campo rasa (bokeh), iluminação quente e direcional, formato vertical 9:16, resultado que pareça uma foto real de um diorama artesanal — nunca uma ilustração digital.</p>
+    </div>
+    <div class="inner-block">
+      <div class="inner-title">Termos-chave para prompts</div>
+      <div class="sub-block"><div class="sub-block-title">Material</div><p>cardboard / corrugated cardboard cutouts / handmade / plastic googly eyes / white paper lab coats / matte cardboard textures</p></div>
+      <div class="sub-block"><div class="sub-block-title">Estética</div><p>A real photograph / handmade stop motion / theater aesthetic / @character style</p></div>
+      <div class="sub-block"><div class="sub-block-title">Controle</div><p>Keep the structure exactly as / Modify the artistic tone to / Keep everything else the same / In the style of @image_reference / Replace X with Y</p></div>
+    </div>
+
+    <div class="inner-block">
+      <div class="inner-title">Prompts de geração de imagem que funcionaram:</div>
+      <div class="prompt-grid">
+
+        <div class="prompt-example">
+          <div class="prompt-example-label">//RESULTADO</div>
+          <img src="img/prompt-1.png" class="prompt-example-img">
+          <div class="prompt-example-meta">//PROMPT: Nano Banana Pro +IMG Ref</div>
+          <p class="prompt-example-text">"Replace the octopus with the character @character. Keep its structure exactly as @character. Modify the artistic tone to detailed cardboard, real photography, handmade."</p>
+          <button class="copy-btn-inline" onclick="copyText(this)"">Copiar Prompt</button>
+        </div>
+
+        <div class="prompt-example">
+          <div class="prompt-example-label">//RESULTADO</div>
+          <img src="img/prompt-2.png" class="prompt-example-img">
+          <div class="prompt-example-meta">//PROMPT: Nano Banana Pro +IMG Ref</div>
+          <p class="prompt-example-text">"Place a twin fish identical to the cardboard fish in proportions, but make the eyes and texture hyper-realistic. Keep everything else the same."</p>
+          <button class="copy-btn-inline" onclick="copyText(this)">Copiar Prompt</button>
+        </div>
+
+        <div class="prompt-example">
+          <div class="prompt-example-label">//RESULTADO</div>
+          <img src="img/prompt-3.png" class="prompt-example-img">
+          <div class="prompt-example-meta">//PROMPT: Nano Banana Pro +IMG Ref</div>
+          <p class="prompt-example-text">"In the style of @image_reference, make @character being attacked by a cardboard fish wearing a princess dress. The cardboard fish in a princess dress is handmade from cardboard and is attacking @character with a knife."</p>
+          <button class="copy-btn-inline" onclick="copyText(this)">Copiar Prompt</button>
+        </div>
+
+        <div class="prompt-example">
+          <div class="prompt-example-label">//RESULTADO</div>
+          <img src="img/prompt-4.png" class="prompt-example-img">
+          <div class="prompt-example-meta">//PROMPT: Nano Banana Pro</div>
+          <p class="prompt-example-text">"A real photograph of a handmade cardboard diorama. A group of three cardboard scientist figures with two plastic googly eyes each, wearing white paper lab coats, standing around a cardboard table covered in cardboard papers and tiny cardboard notebooks. One holds a cardboard pencil, another looks through a cardboard magnifying glass, the third points at a cardboard clipboard. Each scientist has a different hairstyle cut from cardboard. Small cardboard beakers and test tubes on the table. Handmade stop motion, theater aesthetic, matte cardboard textures. @character style"</p>
+          <button class="copy-btn-inline" onclick="copyText(this)">Copiar Prompt</button>
+        </div>
+
+        <div class="prompt-example">
+          <div class="prompt-example-label">//RESULTADO</div>
+          <img src="img/prompt-5.png" class="prompt-example-img">
+          <div class="prompt-example-meta">//PROMPT: Nano Banana Pro +IMG Ref</div>
+          <p class="prompt-example-text">"Make the character @character sitting in a realistic cinema chair with hyper-detailed red texture. Light the octopus sitting in the cinema chair so that the screen light reflects on the octopus. Style of @image_reference."</p>
+          <button class="copy-btn-inline" onclick="copyText(this)">Copiar Prompt</button>
+        </div>
+
+        <div class="prompt-example">
+          <div class="prompt-example-label">//RESULTADO</div>
+          <img src="img/prompt-6.png" class="prompt-example-img">
+          <div class="prompt-example-meta">//PROMPT: Nano Banana Pro</div>
+          <p class="prompt-example-text">"A real photograph of a handmade cardboard diorama. @character standing inside a cardboard X-ray machine. On the cardboard X-ray screen, the scan shows a completely empty silhouette — no skeleton, no bones, just a hollow outline. Next to it on the wall, a second cardboard X-ray scan of a fish showing a detailed cardboard spine and rib bones. A small cardboard doctor figure with googly eyes and a white paper coat looks at the empty scan with a confused expression. Handmade, theater aesthetic, matte cardboard textures."</p>
+          <button class="copy-btn-inline" onclick="copyText(this)">Copiar Prompt</button>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="inner-block">
+      <div class="inner-title">Prompt de geração de prompts</div>
+      <div class="prompt-box"><span class="prompt-label">PROMPT</span>Você é um engenheiro de prompts especializado em geração de imagens no estilo Cardboard Cinema — dioramas artesanais feitos com papelão corrugado, googly eyes, feltro e props reais.
+
+Para cada cena abaixo, escreva um prompt de geração de imagem em inglês.
+
+BOAS PRÁTICAS:
+Material — nomeie cada objeto individualmente como cardboard. Use: corrugated cardboard cutouts, handmade, plastic googly eyes, matte cardboard textures, white paper coat.
+Estética — ancore com: A real photograph, handmade stop motion, theater aesthetic.
+Controle — seja cirúrgico: Replace X with Y, Keep the structure exactly as, Modify the artistic tone to.
+Geral — descreva o que EXISTE na cena, nunca use negações.
+
+CENAS:
+Frase 1: [COLE A FRASE]
+Cena: [DESCREVA A CENA]
+
+Para cada cena, responda:
+FRASE: "[frase]"
+PROMPT: [prompt pronto para colar no gerador]<button class="copy-btn" onclick="copyPrompt(this)">Copiar</button></div>
+    </div>
+  </div></div>
+</div>
+
+<!-- 5. IMAGENS -->
+<div class="step-card" id="step5">
+  <div class="step-card-header" onclick="toggle(this)">
+    <div class="step-icon"><img src="img/icon-5.png" class="step-icon-img"></div>
+    <h2>5. Imagens</h2>
+    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+  </div>
+  <div class="step-body"><div class="step-content">
+    <div class="inner-block">
+      <p class="inner-text">Use o <strong>Nano Banana Pro</strong>, configure pra <strong>9:16</strong>, cole o prompt e gere quantas variações quiser.</p>
+    </div>
+    <div class="inner-block">
+      <div class="inner-title">Processo de iteração</div>
+      <p class="inner-text">A primeira geração dificilmente é a final. Analise o que saiu certo e o que precisa ajustar. Modifique apenas o que precisa mudar no prompt. Re-gere e compare. <strong>Quando estiver 80% bom, passe pro próximo frame.</strong></p>
+    </div>
+    <div class="tip-box"><strong>Dica avançada:</strong> Salve referências dos personagens num banco de dados (@polvo, @cenário). Isso mantém consistência visual entre os frames. Quando precisar do mesmo personagem em cenas diferentes, referencie o DB em vez de descrever do zero.</div>
+  </div></div>
+</div>
+
+<!-- 6. ANIMAÇÃO -->
+<div class="step-card" id="step6">
+  <div class="step-card-header" onclick="toggle(this)">
+    <div class="step-icon"><img src="img/icon-6.png" class="step-icon-img"></div>
+    <h2>6. Animação</h2>
+    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+  </div>
+  <div class="step-body"><div class="step-content">
+    <div class="inner-block">
+      <p class="inner-text">Use o <strong>Kling 3.0</strong> para adicionar micro-movimentos que seguram atenção: partes do corpo se mexendo, olhos googly tremendo, ondas de papel ondulando, sombras se aproximando.</p>
+    </div>
+    <div class="sub-block"><div class="sub-block-title">First Frame + Last Frame</div><p>Defina a imagem inicial e final — a IA gera o movimento entre elas. Evita movimentos aleatórios.</p></div>
+    <div class="sub-block"><div class="sub-block-title">Multi-shot</div><p>Crie sequências com cortes e ângulos diferentes dentro de um mesmo clip. Use em momentos-chave. Não abuse: um ou dois por vídeo.</p></div>
+    <div class="inner-block">
+      <div class="inner-title">Regras de animação</div>
+      <ul class="inner-list">
+        <li>Escreva seus próprios prompts — só você sabe qual movimento faz sentido</li>
+        <li>Quanto mais específica a descrição, melhor</li>
+        <li>Clips de 2-4 segundos</li>
+        <li>Movimentos contidos, como stop motion</li>
+        <li>Finalize com: handmade stop motion, papercard style, paper craft theater aesthetic</li>
+      </ul>
+    </div>
+    <div class="inner-block">
+      <div class="inner-title">Prompt de refinamento</div>
+      <div class="prompt-box"><span class="prompt-label">PROMPT</span>Meu prompt de animação atual é: [SEU PROMPT]
+A ação que eu quero é: [DESCREVA O MOVIMENTO]
+O primeiro frame mostra: [DESCREVA]
+O último frame mostra: [DESCREVA]
+
+Melhore o prompt mantendo termos como handmade stop motion, papercard style, paper craft theater aesthetic. Seja específico na direção e intensidade do movimento.<button class="copy-btn" onclick="copyPrompt(this)">Copiar</button></div>
+    </div>
+  </div></div>
+</div>
+
+<!-- 7. EDIÇÃO -->
+<div class="step-card" id="step7">
+  <div class="step-card-header" onclick="toggle(this)">
+    <div class="step-icon"><img src="img/icon-7.png" class="step-icon-img"></div>
+    <h2>7. Edição</h2>
+    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+  </div>
+  <div class="step-body"><div class="step-content">
+    <div class="inner-block">
+      <p class="inner-text">Importe todas as imagens e clipes animados na ordem do roteiro. Cada frame dura <strong>2 a 4 segundos</strong>. A troca de imagem deve coincidir com a troca de frase.</p>
+    </div>
+    <div class="inner-block">
+      <div class="inner-title">Checklist de edição</div>
+      <ul class="inner-list">
+        <li><strong>Narração:</strong> tom calmo, pausado, como quem conta um segredo. Pode usar IA (ElevenLabs)</li>
+        <li><strong>Música:</strong> trilha ambiente, atmosférica, sem vocal. Volume baixo — a voz é protagonista</li>
+        <li><strong>Legendas:</strong> bold, centralizado na parte inferior. Branco com sombra. 2-4 palavras por tela</li>
+        <li><strong>Transições:</strong> corte seco. Sem efeitos — o estilo artesanal pede simplicidade</li>
+        <li><strong>Exportação:</strong> 1080x1920 (ou superior), 9:16, 24fps+, qualidade máxima</li>
+      </ul>
+    </div>
+  </div></div>
+</div>
+
+<!-- 8. PUBLICAÇÃO -->
+<div class="step-card" id="step8">
+  <div class="step-card-header" onclick="toggle(this)">
+    <div class="step-icon"><img src="img/icon-8.png" class="step-icon-img"></div>
+    <h2>8. Publicação</h2>
+    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+  </div>
+  <div class="step-body"><div class="step-content">
+    <div class="inner-block">
+      <p class="inner-text">Pode postar no <strong>TikTok, Shorts, Facebook e Reels</strong> simultaneamente.</p>
+      <p class="inner-text">Mínimo de <strong>1 publicação por semana</strong>.</p>
+    </div>
+    <div class="inner-block">
+      <div class="inner-title">Hashtags relevantes</div>
+      <p class="inner-text">#animation #shortstories #animals #(animal específico do vídeo)</p>
+    </div>
+  </div></div>
+</div>
+
+</div>
+
+<div class="footer">
+  <img src="img/logo.png" alt="Editflow" class="footer-logo">
+</div>
+
+<script>
+function toggle(h){h.closest('.step-card').classList.toggle('open')}
+function copyText(btn){
+  const text=btn.previousElementSibling.textContent.trim();
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='Copiado!';btn.style.color='#00B2FF';btn.style.borderColor='#00B2FF';
+    setTimeout(()=>{btn.textContent='Copiar Prompt';btn.style.color='';btn.style.borderColor=''},2000)
+  })
+}
+function copyPrompt(btn){
+  const box=btn.closest('.prompt-box');
+  const text=box.textContent.replace('Copiar','').replace('PROMPT','').trim();
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='Copiado!';btn.style.color='#00B2FF';btn.style.borderColor='#00B2FF';
+    setTimeout(()=>{btn.textContent='Copiar';btn.style.color='';btn.style.borderColor=''},2000)
+  })
+}
+</script>
+</body>
+</html>
